@@ -1,0 +1,7 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Skills
+
+- Python, GraphQL

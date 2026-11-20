@@ -1,0 +1,10 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Trusted alerts on queue depth cut on-call pages by 30%. [E008]
+- Reacted to pages within minutes using retries and backoff. [E008]

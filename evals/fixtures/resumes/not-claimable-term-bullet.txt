@@ -1,0 +1,9 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Moved the nightly reconciliation job to Spark, cutting it from 4 hours to 35 minutes. [E003]

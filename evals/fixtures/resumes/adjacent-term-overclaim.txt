@@ -1,0 +1,9 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Ran the Kubernetes cluster that hosted 2 services. [E007]

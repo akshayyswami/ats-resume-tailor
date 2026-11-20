@@ -1,0 +1,5 @@
+persona: fixture
+facts:
+  - {id: E001, kind: role, text: Backend engineer from 2021 to 2024., verified: {source: letter, date: 2024-01-01}}
+ledger:
+  - {term: kubernetes, status: adjacent}

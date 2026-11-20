@@ -1,0 +1,111 @@
+# FICTIONAL sample persona. Every name, employer, number and date in this file is invented for
+# this repo. None of it describes a real person or company.
+
+persona: Jordan Lee (fictional)
+
+facts:
+  - id: E001
+    kind: role
+    text: Backend engineer at Example Freight Co from 2021 to 2024, on the shipment-tracking service.
+    skills: [python, postgresql]
+    verified: {source: employment letter (invented), date: 2024-06-30}
+
+  - id: E002
+    kind: metric
+    text: >-
+      Cut p95 latency of the shipment lookup API from 900 ms to 240 ms with a covering index
+      and a read replica.
+    skills: [postgresql, python]
+    verified: {source: load-test report (invented), date: 2023-03-14}
+
+  - id: E003
+    kind: metric
+    text: >-
+      Cut the nightly reconciliation job from 4 hours to 35 minutes by replacing row-by-row
+      updates with bulk upserts.
+    skills: [postgresql, sql]
+    verified: {source: job run history (invented), date: 2023-08-02}
+
+  - id: E004
+    kind: project
+    text: Built a Kafka consumer in Go that ingested 1,200 events per second from carrier webhooks.
+    skills: [kafka, go]
+    verified: {source: design doc and dashboard (invented), date: 2022-11-20}
+
+  - id: E005
+    kind: role
+    text: Led a team of 4 engineers for 9 months on the carrier integration rewrite.
+    verified: {source: manager reference (invented), date: 2024-02-10}
+
+  - id: E006
+    kind: project
+    text: >-
+      Containerised 6 services with Docker and wrote the CI pipeline that built and tested them
+      on every push.
+    skills: [docker, ci]
+    verified: {source: repository history (invented), date: 2022-05-09}
+
+  - id: E007
+    kind: project
+    text: >-
+      Deployed 2 services onto a Kubernetes cluster run by the platform team and wrote their Helm
+      values. Did not administer the cluster.
+    verified: {source: repository history (invented), date: 2023-10-01}
+
+  - id: E008
+    kind: metric
+    text: Reduced on-call pages by 30% with retries and backoff and an alert on queue depth.
+    skills: [python]
+    verified: {source: pager history (invented), date: 2023-12-05}
+
+  - id: E009
+    kind: role
+    text: >-
+      Data engineer at Sample Health Data Inc from 2018 to 2021, maintaining ETL jobs in Python
+      and SQL.
+    skills: [python, sql]
+    verified: {source: employment letter (invented), date: 2021-03-31}
+
+  - id: E010
+    kind: metric
+    text: >-
+      Replaced 3 hand-run scripts with one scheduled pipeline that saves about 5 hours of analyst
+      time per week.
+    skills: [python]
+    verified: {source: team retrospective notes (invented), date: 2020-09-18}
+
+  - id: E011
+    kind: project
+    text: Wrote the onboarding guide used by 12 new engineers.
+    verified: {source: wiki page history (invented), date: 2023-06-12}
+
+  - id: E012
+    kind: skill
+    text: Daily use of PostgreSQL, Python and Go, with working knowledge of Kafka.
+    skills: [postgresql, python, go, kafka]
+    verified: {source: self-assessment against the projects above (invented), date: 2024-06-30}
+
+ledger:
+  - {term: python, status: claimable}
+  - {term: postgresql, status: claimable, aliases: [postgres, psql]}
+  - {term: sql, status: claimable}
+  - {term: go, status: claimable, aliases: [golang]}
+  - {term: kafka, status: claimable}
+  - {term: docker, status: claimable}
+  - {term: ci, status: claimable, aliases: [continuous integration]}
+  - term: kubernetes
+    status: adjacent
+    aliases: [k8s]
+    say_instead: deployed 2 services onto a Kubernetes cluster run by the platform team
+    supported_by: [E007]
+  - {term: rust, status: not_claimable}
+  - {term: spark, status: not_claimable, aliases: [pyspark, apache spark]}
+  - {term: terraform, status: not_claimable}
+  - {term: react, status: not_claimable}
+  - {term: aws, status: not_claimable, aliases: [amazon web services]}
+
+banned_words: [rockstar, ninja]
+
+corrections:
+  - wrong: led a team of 10
+    right: Led a team of 4 engineers (E005).

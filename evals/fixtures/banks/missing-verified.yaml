@@ -1,0 +1,3 @@
+persona: fixture
+facts:
+  - {id: E001, kind: role, text: Backend engineer from 2021 to 2024.}

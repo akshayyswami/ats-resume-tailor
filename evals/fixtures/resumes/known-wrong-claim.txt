@@ -1,0 +1,9 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Led a team of 10 engineers for 9 months on the carrier integration rewrite. [E005]

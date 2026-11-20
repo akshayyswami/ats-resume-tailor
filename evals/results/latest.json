@@ -1,0 +1,13 @@
+{
+  "faults": {
+    "must_allow_passed": 6,
+    "must_allow_total": 6,
+    "must_catch_caught": 20,
+    "must_catch_total": 20,
+    "rules_covered": 17,
+    "rules_total": 17
+  },
+  "persona": {
+    "facts": 12
+  }
+}

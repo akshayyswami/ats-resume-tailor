@@ -1,0 +1,150 @@
+# Planted faults. Two-sided on purpose.
+#
+# must_catch: a known-bad input. The check has to report the rule named in expect_rule.
+# must_allow: a clean input. The check has to report no FAIL. This half is not optional: a checker
+#             that rejects everything passes any one-sided test. A NOT CHECKED finding is allowed.
+#
+# kind: resume runs `verify` on a fixture resume against `bank` (default: the persona bank).
+# kind: bank runs `check-evidence` on the fixture bank.
+# Paths are relative to this directory. Fixture resumes use .txt so the repo's own markdown
+# writing check does not flag the em dash and banned words planted in them.
+#
+# Every rule in core/verify.py must appear in expect_rule at least once. measure.py fails if not.
+
+must_catch:
+  # Resume faults: citations
+  - id: no-evidence-id
+    kind: resume
+    input: fixtures/resumes/no-evidence-id.txt
+    expect_rule: no-evidence-id
+    reason: a claim with a real number and no evidence ID
+  - id: paragraph-without-evidence
+    kind: resume
+    input: fixtures/resumes/paragraph-without-evidence.txt
+    expect_rule: no-evidence-id
+    reason: a summary paragraph is a claim too, and cites nothing
+  - id: unknown-evidence-id
+    kind: resume
+    input: fixtures/resumes/unknown-evidence-id.txt
+    expect_rule: unknown-evidence-id
+    reason: cites E099, which is not in the bank
+  - id: unverified-evidence-cited
+    kind: resume
+    bank: fixtures/banks/with-unverified.yaml
+    input: fixtures/resumes/unverified-evidence-cited.txt
+    expect_rule: unverified-evidence-cited
+    reason: cites a fact that has no verification source
+
+  # Resume faults: numbers
+  - id: number-not-in-cited-evidence
+    kind: resume
+    input: fixtures/resumes/number-not-in-cited-evidence.txt
+    expect_rule: number-not-in-cited-evidence
+    reason: an inflated figure, 120 ms where the fact says 240 ms
+  - id: number-from-other-fact
+    kind: resume
+    input: fixtures/resumes/number-from-other-fact.txt
+    expect_rule: number-from-other-fact
+    reason: a real 30 percent, taken from a fact the bullet does not cite
+
+  # Resume faults: terms
+  - id: not-claimable-term-bullet
+    kind: resume
+    input: fixtures/resumes/not-claimable-term-bullet.txt
+    expect_rule: not-claimable-term
+    reason: claims Spark, which the ledger marks not claimable
+  - id: not-claimable-term-skills
+    kind: resume
+    input: fixtures/resumes/not-claimable-term-skills.txt
+    expect_rule: not-claimable-term
+    reason: lists Rust under Skills
+  - id: adjacent-term-overclaim
+    kind: resume
+    input: fixtures/resumes/adjacent-term-overclaim.txt
+    expect_rule: adjacent-term-overclaim
+    reason: says "ran the Kubernetes cluster" where the ledger allows only the sanctioned wording
+  - id: term-not-in-cited-evidence
+    kind: resume
+    input: fixtures/resumes/term-not-in-cited-evidence.txt
+    expect_rule: term-not-in-cited-evidence
+    reason: Kafka is a real skill of the persona, but not of the fact this bullet cites
+  - id: unsupported-skill
+    kind: resume
+    input: fixtures/resumes/unsupported-skill.txt
+    expect_rule: unsupported-skill
+    reason: GraphQL is in no fact and not in the ledger, so it cannot be listed as a skill
+
+  # Resume faults: corrections and style
+  - id: known-wrong-claim
+    kind: resume
+    input: fixtures/resumes/known-wrong-claim.txt
+    expect_rule: known-wrong-claim
+    reason: repeats "led a team of 10", which the corrections list says is wrong
+  - id: banned-word-builtin
+    kind: resume
+    input: fixtures/resumes/banned-word-builtin.txt
+    expect_rule: banned-word
+    reason: uses "spearheaded", on the built-in list
+  - id: banned-word-bank
+    kind: resume
+    input: fixtures/resumes/banned-word-bank.txt
+    expect_rule: banned-word
+    reason: uses "rockstar", which only this bank bans
+  - id: em-dash
+    kind: resume
+    input: fixtures/resumes/em-dash.txt
+    expect_rule: em-dash
+    reason: contains an em dash
+
+  # Evidence bank faults
+  - id: duplicate-id
+    kind: bank
+    input: fixtures/banks/duplicate-id.yaml
+    expect_rule: duplicate-id
+    reason: two facts share E001, so a citation would be ambiguous
+  - id: missing-verified
+    kind: bank
+    input: fixtures/banks/missing-verified.yaml
+    expect_rule: missing-verified
+    reason: a fact with no verification source and date
+  - id: metric-without-number
+    kind: bank
+    input: fixtures/banks/metric-without-number.yaml
+    expect_rule: metric-without-number
+    reason: a metric fact that states no number
+  - id: claimable-without-evidence
+    kind: bank
+    input: fixtures/banks/claimable-without-evidence.yaml
+    expect_rule: claimable-without-evidence
+    reason: the ledger says Scala is claimable and no fact lists it
+  - id: adjacent-incomplete
+    kind: bank
+    input: fixtures/banks/adjacent-incomplete.yaml
+    expect_rule: adjacent-incomplete
+    reason: an adjacent term with no sanctioned wording and no supporting facts
+
+must_allow:
+  - id: clean-persona-resume
+    kind: resume
+    input: ../examples/persona/resume.md
+    reason: the sample resume, every line cited and every figure from its facts
+  - id: persona-bank-clean
+    kind: bank
+    input: ../examples/persona/evidence.yaml
+    reason: the sample bank passes its own checks
+  - id: weakly-checked-bullet
+    kind: resume
+    input: fixtures/resumes/ok-weakly-checked.txt
+    reason: a cited bullet with no number and no known term passes, reported as not checked
+  - id: number-formats
+    kind: resume
+    input: fixtures/resumes/ok-number-formats.txt
+    reason: the figure 1200 matches 1,200 and 30 percent matches 30%
+  - id: word-boundary
+    kind: resume
+    input: fixtures/resumes/ok-word-boundary.txt
+    reason: rust inside trusted and react inside reacted are not the skills
+  - id: short-term-case
+    kind: resume
+    input: fixtures/resumes/ok-short-term-case.txt
+    reason: the verb "go" in lower case is not the language Go

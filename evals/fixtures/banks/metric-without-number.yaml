@@ -1,0 +1,3 @@
+persona: fixture
+facts:
+  - {id: E001, kind: metric, text: Made the API much faster., verified: {source: dashboard, date: 2024-01-01}}

@@ -1,0 +1,10 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Built a Kafka consumer in Go that ingested 1200 events per second from carrier webhooks. [E004]
+- Reduced on-call pages by 30 percent with retries and backoff and an alert on queue depth. [E008]
