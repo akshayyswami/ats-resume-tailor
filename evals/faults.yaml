@@ -117,6 +117,48 @@ must_catch:
     expect_rule: term-not-in-cited-evidence
     reason: retries is in the gap file and in another fact's text, but not in the fact this bullet cites
 
+  # Header block, empty resumes and hidden characters
+  - id: claim-in-header-term
+    kind: resume
+    input: fixtures/resumes/claim-in-header-term.txt
+    expect_rule: claim-in-header
+    reason: a not-claimable skill and an inflated figure in the header block, which cites no evidence
+  - id: claim-in-header-figure
+    kind: resume
+    input: fixtures/resumes/claim-in-header-figure.txt
+    expect_rule: claim-in-header
+    reason: a claim-shaped figure in the header with no skill term in it
+  - id: claim-in-header-heading
+    kind: resume
+    input: fixtures/resumes/claim-in-header-heading.txt
+    expect_rule: claim-in-header
+    reason: a sub-heading and a claim with no `## ` section anywhere, so all of it is header
+  - id: no-claims-no-sections
+    kind: resume
+    input: fixtures/resumes/claim-in-header-heading.txt
+    expect_rule: no-claims
+    reason: with no `## ` section the resume has no claim lines, and zero checked lines must not read as ok
+  - id: no-claims-header-only
+    kind: resume
+    input: fixtures/resumes/no-claims.txt
+    expect_rule: no-claims
+    reason: a name and a contact line and nothing else
+  - id: hidden-characters
+    kind: resume
+    input: fixtures/resumes/hidden-characters.txt
+    expect_rule: hidden-characters
+    reason: a zero-width space inside Rust hides the word from a checker and from a reader
+  - id: hidden-characters-term-still-found
+    kind: resume
+    input: fixtures/resumes/hidden-characters.txt
+    expect_rule: not-claimable-term
+    reason: the invisible character is dropped before matching, so the not-claimable skill is still found
+  - id: fullwidth-term
+    kind: resume
+    input: fixtures/resumes/fullwidth-term.txt
+    expect_rule: not-claimable-term
+    reason: a fullwidth letter makes a lookalike of Rust, and compatibility folding finds it
+
   # PDF faults
   - id: pdf-no-extractable-text-blank
     kind: pdf
@@ -233,3 +275,7 @@ must_allow:
     input: fixtures/pdfs/one-column-with-logo.pdf
     source: ../examples/persona/resume.clean.md
     reason: a decorative image alone is not a failure when every word still comes back
+  - id: header-contact-details
+    kind: resume
+    input: fixtures/resumes/ok-header-contact.txt
+    reason: a header with a phone number, an email, a city and a link is a name and contact details, not claims

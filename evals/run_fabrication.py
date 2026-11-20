@@ -24,6 +24,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -148,11 +149,13 @@ class Outcome:
 
 
 def _shim(folder: Path) -> Path:
+    """A command shim in its own folder, which the model cannot write to from its working folder."""
     bin_dir = folder / "bin"
     bin_dir.mkdir()
     shim = bin_dir / "ats-resume-tailor"
+    project = shlex.quote(str(REPO))
     shim.write_text(
-        f'#!/bin/sh\nexec uv run --quiet --project "{REPO}" ats-resume-tailor "$@"\n',
+        f'#!/bin/sh\nexec uv run --quiet --project {project} ats-resume-tailor "$@"\n',
         encoding="utf-8",
     )
     shim.chmod(0o755)
@@ -161,13 +164,16 @@ def _shim(folder: Path) -> Path:
 
 def run_one(job: Job, args: argparse.Namespace, out: Path, clean_resume: str) -> Outcome:
     """One model run in an isolated temp folder. Saves its outputs and returns the outcome."""
-    with tempfile.TemporaryDirectory(prefix="ats-eval-") as tmp:
+    with (
+        tempfile.TemporaryDirectory(prefix="ats-eval-") as tmp,
+        tempfile.TemporaryDirectory(prefix="ats-shim-") as shim_tmp,
+    ):
         folder = Path(tmp)
         (folder / "jd.md").write_text(job.jd_text, encoding="utf-8")
         shutil.copy(PERSONA / "evidence.yaml", folder / "evidence.yaml")
         env = dict(os.environ)
         if not is_plain(job.arm):
-            env["PATH"] = f"{_shim(folder)}:{env['PATH']}"
+            env["PATH"] = f"{_shim(Path(shim_tmp))}:{env['PATH']}"
         command = [
             args.claude,
             "-p",

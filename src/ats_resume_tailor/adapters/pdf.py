@@ -14,27 +14,41 @@ from pypdf import PdfReader
 from ats_resume_tailor.core.pdfcheck import Extraction, PdfError
 
 _MAX_FORM_DEPTH = 3
-_ERROR_LENGTH = 200
+_MAX_OBJECTS = 10_000
 
 
-def _count_images(resources: Any, depth: int = 0) -> int:
-    """Image XObjects in a page's resources, including those inside form XObjects.
+def _count_images(resources: Any) -> int:
+    """Image XObjects reachable from a page's resources, including inside form XObjects.
 
-    Counting the objects avoids decoding them, which can fail on unusual image filters.
+    Each object is visited once and the walk stops after _MAX_OBJECTS, so a file whose forms list
+    each other many times cannot make it run for hours. Counting the objects avoids decoding them,
+    which can fail on unusual image filters.
     """
-    if resources is None or depth > _MAX_FORM_DEPTH:
-        return 0
-    xobjects = resources.get_object().get("/XObject")
-    if xobjects is None:
-        return 0
+    seen: set[Any] = set()
+    pending: list[tuple[Any, int]] = [(resources, 0)]
     total = 0
-    for reference in xobjects.get_object().values():
-        item = reference.get_object()
-        subtype = item.get("/Subtype")
-        if subtype == "/Image":
-            total += 1
-        elif subtype == "/Form":
-            total += _count_images(item.get("/Resources"), depth + 1)
+    while pending and len(seen) < _MAX_OBJECTS:
+        node, depth = pending.pop()
+        if node is None or depth > _MAX_FORM_DEPTH:
+            continue
+        xobjects = node.get_object().get("/XObject")
+        if xobjects is None:
+            continue
+        for reference in xobjects.get_object().values():
+            key = (
+                (reference.idnum, reference.generation)
+                if hasattr(reference, "idnum")
+                else id(reference)
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            item = reference.get_object()
+            subtype = item.get("/Subtype")
+            if subtype == "/Image":
+                total += 1
+            elif subtype == "/Form":
+                pending.append((item.get("/Resources"), depth + 1))
     return total
 
 
@@ -56,6 +70,6 @@ def read_pdf(path: Path) -> Extraction:
     except OSError as exc:
         raise PdfError(f"cannot read {path}: {exc.strerror or exc}") from exc
     except Exception as exc:  # pypdf raises many types on damaged input
-        detail = f"{type(exc).__name__}: {exc}"[:_ERROR_LENGTH]
-        raise PdfError(f"cannot read {path} as a PDF ({detail})") from exc
+        # Only the type name: the message can carry text taken from the file.
+        raise PdfError(f"cannot read {path} as a PDF ({type(exc).__name__})") from exc
     return Extraction(stream=stream, visual=visual, pages=len(pages), images=images)

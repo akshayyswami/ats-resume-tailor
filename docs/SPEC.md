@@ -69,6 +69,8 @@ Status is HAVE, PARTIAL or MISSING. A malformed table is an input error, not a g
 
 Numbers are checked against the facts a bullet cites, not the whole bank, so a figure from one fact cannot be reused on another. Terms are checked against a lexicon built from the bank's skill tags and the ledger: every term found in a bullet has to be supported by the facts it cites, a not-claimable term fails anywhere, an adjacent-only term passes only in its sanctioned wording. A term outside the lexicon is not checked.
 
+The header block is the name and contact details, everything before the first `## ` heading. Nothing in it cites evidence, so it fails if it holds a lexicon term, a claim-shaped figure (a percent, a multiplier, an amount, a k, m or b figure, or a number of years or months), a bullet or a sub-heading. A long line with none of those is NOT CHECKED. A resume with no claim lines and no skills items fails, so a file with no `## ` section cannot pass by being all header. Invisible format characters fail, and text is compatibility-folded before matching.
+
 With `--gaps`, every term in the gap table joins the lexicon, so a skill the persona lacks and the ledger never mentioned still fails when a bullet claims it. A term of a MISSING requirement fails anywhere after the header block.
 
 ### What `pdf-check` checks

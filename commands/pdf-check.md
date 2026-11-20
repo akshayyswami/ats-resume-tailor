@@ -1,7 +1,7 @@
 ---
 description: Check that a resume PDF gives its text back, in order, the way an ATS reads it
 argument-hint: <resume.pdf> [resume.clean.md]
-allowed-tools: Bash(ats-resume-tailor:*), Read
+allowed-tools: Bash(ats-resume-tailor pdf-check:*)
 ---
 
 Check the PDF named in $ARGUMENTS with the ats-resume-tailor command.

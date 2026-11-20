@@ -55,9 +55,18 @@ def _as_dict(finding: Finding) -> dict[str, object]:
     }
 
 
+def _clean(text: str) -> str:
+    """The text with every non-printable character shown as an escape.
+
+    A finding can quote the resume, and a resume can hold terminal control sequences.
+    """
+    return "".join(ch if ch.isprintable() or ch == "\t" else f"\\u{ord(ch):04x}" for ch in text)
+
+
 def _show(label: str, finding: Finding) -> None:
     where = f"{label}:{finding.line}" if finding.line else label
-    typer.echo(f"{where}: {finding.status.replace('_', ' ')} {finding.rule}: {finding.message}")
+    status = finding.status.replace("_", " ")
+    typer.echo(f"{_clean(where)}: {status} {finding.rule}: {_clean(finding.message)}")
 
 
 def _summary(report: Report) -> str:
@@ -94,10 +103,15 @@ def version() -> None:
 @app.command()
 def init(path: Annotated[Path, typer.Argument()] = Path("evidence.yaml")) -> None:
     """Write a starter evidence bank. Never overwrites an existing file."""
-    if path.exists():
+    try:
+        with path.open("x", encoding="utf-8") as handle:  # fails on a file or a dangling symlink
+            handle.write(EVIDENCE_TEMPLATE)
+    except FileExistsError as exc:
         typer.echo(f"{path} already exists; not overwriting it", err=True)
-        raise typer.Exit(1)
-    path.write_text(EVIDENCE_TEMPLATE, encoding="utf-8")
+        raise typer.Exit(1) from exc
+    except OSError as exc:
+        typer.echo(f"error: cannot write {path}: {exc.strerror or exc}", err=True)
+        raise typer.Exit(2) from exc
     typer.echo(f"wrote {path}. Replace the example fact, then run: check-evidence {path}")
 
 
@@ -143,6 +157,25 @@ def verify_command(
     raise typer.Exit(0 if report.ok else 1)
 
 
+EXPORT_SUFFIXES = (".md", ".markdown", ".txt")
+
+
+def _export_problem(target: Path, protected: dict[str, Path | None]) -> str:
+    """Why `export` must not write to `target`, or an empty string.
+
+    The output is text the user asked for, so it may go to a new or old text file and nowhere
+    else: not over the files the check read, not through a link, not to a path with another type.
+    """
+    if target.suffix.lower() not in EXPORT_SUFFIXES:
+        return f"the output must be a {', '.join(EXPORT_SUFFIXES)} file, not {target.name}"
+    if target.is_symlink():
+        return f"{target} is a symbolic link, and export does not write through links"
+    for label, path in protected.items():
+        if path is not None and target.resolve() == path.resolve():
+            return f"the output would overwrite the {label}"
+    return ""
+
+
 @app.command("export")
 def export_command(
     resume: Path,
@@ -161,10 +194,17 @@ def export_command(
         typer.echo(f"{_summary(report)}\nexport: refused, nothing written", err=True)
         raise typer.Exit(1)
     target = output or resume.with_name(f"{resume.stem}.clean{resume.suffix}")
-    if target.resolve() == resume.resolve():
-        typer.echo("error: the output would overwrite the annotated resume", err=True)
+    problem = _export_problem(
+        target, {"annotated resume": resume, "evidence file": evidence, "gap file": gaps}
+    )
+    if problem:
+        typer.echo(f"error: {problem}", err=True)
         raise typer.Exit(2)
-    target.write_text(strip_ids(text), encoding="utf-8")
+    try:
+        target.write_text(strip_ids(text), encoding="utf-8")
+    except OSError as exc:
+        typer.echo(f"error: cannot write {target}: {exc.strerror or exc}", err=True)
+        raise typer.Exit(2) from exc
     typer.echo(f"{_summary(report)}\nexport: wrote {target}")
 
 

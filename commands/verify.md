@@ -1,7 +1,7 @@
 ---
 description: Check a resume against your evidence file and report what it cannot back up
 argument-hint: <resume.md> [evidence.yaml] [gap.md]
-allowed-tools: Bash(ats-resume-tailor:*), Read
+allowed-tools: Bash(ats-resume-tailor verify:*)
 ---
 
 Check the annotated resume named in $ARGUMENTS with the ats-resume-tailor command.

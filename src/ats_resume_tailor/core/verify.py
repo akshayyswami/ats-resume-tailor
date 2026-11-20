@@ -8,13 +8,14 @@ something and says so. It never guesses and never passes what it could not check
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 from typing import Final, Literal
 
 from ats_resume_tailor.core.ai_tells import AI_TELLS
 from ats_resume_tailor.core.gaps import GapTable
 from ats_resume_tailor.core.models import Evidence, Fact
-from ats_resume_tailor.core.numbers import canonical_values, extract, quantity_words
+from ats_resume_tailor.core.numbers import NumberMention, canonical_values, extract, quantity_words
 from ats_resume_tailor.core.resume import Line, parse
 from ats_resume_tailor.core.terms import Lexicon, build_lexicon, normalise, word_pattern
 
@@ -35,6 +36,9 @@ RESUME_RULES: Final = (
     "missing-requirement-claimed",
     "banned-word",
     "em-dash",
+    "claim-in-header",
+    "no-claims",
+    "hidden-characters",
 )
 BANK_RULES: Final = (
     "duplicate-id",
@@ -94,6 +98,99 @@ def _banned_patterns(evidence: Evidence) -> list[tuple[str, re.Pattern[str]]]:
         (word, re.compile(rf"(?<![A-Za-z0-9]){re.escape(word)}(?![A-Za-z0-9])", re.IGNORECASE))
         for word in words
     ]
+
+
+_BULLET_START = re.compile(r"^\s*[-*+]\s+")
+# A contact detail: an email, a link, or a phone-like run of digits.
+_CONTACT = re.compile(r"@|https?://|www\.|\d[\d\s().-]{5,}\d")
+_YEARS = re.compile(r"\d\+?\s*(?:years?|yrs?|months?)\b", re.IGNORECASE)
+HEADER_PROSE_WORDS: Final = 9
+
+
+def _claim_shaped(mention: NumberMention) -> bool:
+    """A figure that states a result, not a phone number: a percent, multiplier, amount or k/m/b."""
+    raw = mention.raw
+    return mention.value.endswith(("%", "x")) or raw[0] in "$\u00a3\u20ac" or raw[-1] in "kKmMbB"
+
+
+def _header_findings(line: Line, lexicon: Lexicon) -> list[Finding]:
+    """The header block holds a name and contact details. Anything shaped like a claim fails there.
+
+    Nothing in the header cites evidence, so a claim placed in it would never be checked.
+    """
+    if line.level == 1:
+        return []  # the name
+    found: list[Finding] = []
+    if line.level >= 3 or _BULLET_START.match(line.raw):
+        found.append(
+            Finding(
+                "claim-in-header",
+                line.number,
+                "a bullet or sub-heading before the first `## ` section cites no evidence and is "
+                "never checked. Put it under a `## ` section",
+            )
+        )
+    terms = lexicon.find(line.body)
+    if terms:
+        found.append(
+            Finding(
+                "claim-in-header",
+                line.number,
+                f'"{terms[0]}" appears in the header block, which is never checked. Put it in a '
+                "bullet under a `## ` section with evidence IDs",
+            )
+        )
+    figures = [m.raw for m in extract(line.raw) if _claim_shaped(m)]
+    years = _YEARS.search(line.raw)
+    if years:
+        figures.append(years.group(0))
+    if figures:
+        found.append(
+            Finding(
+                "claim-in-header",
+                line.number,
+                f'the figure "{figures[0]}" appears in the header block, which is never checked. '
+                "Put it in a bullet under a `## ` section with evidence IDs",
+            )
+        )
+    if not found and len(line.body.split()) >= HEADER_PROSE_WORDS and not _CONTACT.search(line.raw):
+        found.append(
+            Finding(
+                "header-prose",
+                line.number,
+                "a long line in the header block is not checked",
+                "NOT_CHECKED",
+            )
+        )
+    return found
+
+
+def _hidden_characters(text: str) -> list[Finding]:
+    """Invisible format characters: zero-width spaces, soft hyphens, bidi marks."""
+    found: list[Finding] = []
+    for number, raw in enumerate(text.splitlines(), start=1):
+        hidden = [ch for ch in raw if unicodedata.category(ch) == "Cf"]
+        if hidden:
+            ch = hidden[0]
+            name = unicodedata.name(ch, "FORMAT CHARACTER")
+            found.append(
+                Finding(
+                    "hidden-characters",
+                    number,
+                    f"contains an invisible character (U+{ord(ch):04X} {name}). It hides text "
+                    "from a reader and splits a word for a checker",
+                )
+            )
+    return found
+
+
+def _fold(text: str) -> str:
+    """Compatibility-fold the text and drop format characters, so a lookalike cannot dodge a term.
+
+    Fullwidth letters become plain ones. The invisible characters were already reported.
+    """
+    folded = unicodedata.normalize("NFKC", text)
+    return "".join(ch for ch in folded if unicodedata.category(ch) != "Cf")
 
 
 def _style_findings(
@@ -272,6 +369,8 @@ def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Repor
 
     With a gap table, its terms join the lexicon, so a term no cited fact supports fails when a
     bullet uses it, and a term of a MISSING requirement fails anywhere after the header block.
+    The header block is the name and contact details: a skill, a claim-shaped figure, a bullet or
+    a sub-heading there fails, and a resume with no claim lines at all fails.
     """
     index = evidence.fact_index()
     lexicon = build_lexicon(evidence, gaps.terms() if gaps is not None else ())
@@ -283,11 +382,12 @@ def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Repor
     for fact in evidence.facts:
         if fact.verified is not None:
             bank_tags |= _resolved_tags(fact, lexicon)
-    findings: list[Finding] = []
+    findings: list[Finding] = _hidden_characters(text)
     claim_lines = skill_items = unchecked_headings = 0
-    for line in parse(text):
+    for line in parse(_fold(text)):
         findings.extend(_style_findings(line, banned, evidence))
         if line.kind == "header":
+            findings.extend(_header_findings(line, lexicon))
             continue
         for term in lexicon.find(line.body):
             if term in missing:
@@ -315,6 +415,15 @@ def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Repor
         else:
             claim_lines += 1
             findings.extend(_claim_findings(line, index, lexicon, evidence))
+    if claim_lines == 0 and skill_items == 0:
+        findings.append(
+            Finding(
+                "no-claims",
+                0,
+                "the resume has no claim lines and no skills items, so nothing was checked. "
+                "Claims go in bullets under `## ` sections, each ending in evidence IDs",
+            )
+        )
     return Report(tuple(findings), claim_lines, skill_items, unchecked_headings)
 
 

@@ -30,3 +30,8 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 - `verify` no longer fails a bullet for a word its cited fact says, when that word is not a skill tag on the fact. The first full eval run found 16 of 24 honest resumes rejected this way.
 - The fabrication detector no longer scores a model's "I left out X" note as a claim. The first count had read 48 of 48 asks claimed in `plain-pushed`, all of them notes.
+- `verify` no longer passes a fabricated resume whose claims sit in the header block or that has no `## ` section. New rules: `claim-in-header`, `no-claims` and `hidden-characters`. Text is folded to NFKC and stripped of invisible characters before terms are matched.
+- `export -o` writes only text files, never over a file it read and never through a link. `init` creates its file exclusively.
+- Oversized or non-UTF-8 inputs, deeply nested YAML and a hostile PDF are input errors, not tracebacks or hangs. The PDF image walk is bounded.
+- Findings print with control characters escaped, and a PDF error no longer echoes text from the file.
+- The `/verify` and `/pdf-check` commands pre-approve only their own subcommand. `pypdf` needs 7 or later.

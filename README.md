@@ -13,7 +13,7 @@ A CLI and agent skill for tailoring an ATS-friendly resume to a job description 
 
 Two figures, kept apart because one is code and one involves a model.
 
-**The checker.** <!-- eval:faults.must_catch_caught -->30<!-- /eval --> of <!-- eval:faults.must_catch_total -->30<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->10<!-- /eval --> of <!-- eval:faults.must_allow_total -->10<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->22<!-- /eval --> of <!-- eval:faults.rules_total -->22<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
+**The checker.** <!-- eval:faults.must_catch_caught -->38<!-- /eval --> of <!-- eval:faults.must_catch_total -->38<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->11<!-- /eval --> of <!-- eval:faults.must_allow_total -->11<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->25<!-- /eval --> of <!-- eval:faults.rules_total -->25<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, a claim hidden in the header block, an invisible character inside a skill name, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
 
 **A model asked to tailor a resume.** <!-- eval:fabrication.meta.jds -->24<!-- /eval --> invented job descriptions each ask for two skills the persona does not have, <!-- eval:fabrication.meta.asks -->48<!-- /eval --> asks in all. `<!-- eval:fabrication.meta.model -->claude-sonnet-5-5<!-- /eval -->` tailored the persona's resume to each one, once per job description, in four ways:
 
@@ -115,16 +115,20 @@ You keep an `evidence.yaml`: facts, each with a source and a date you checked it
 - every skill or tool the checker knows about is supported by the facts that line cites, a not-claimable one fails anywhere, and an adjacent-only one passes only in the wording the ledger allows,
 - the Skills list holds only things the evidence supports,
 - a term of a MISSING requirement in the gap file does not appear anywhere in the resume,
+- the header block holds only a name and contact details: a skill, a claim-shaped figure, a bullet or a sub-heading there fails, and a resume with no claim lines at all fails instead of passing,
+- no invisible characters such as zero-width spaces are present, and lookalike letters such as fullwidth ones are folded before terms are matched,
 - no known-wrong claim, banned word or em dash is present.
 
-It reports two outcomes and keeps them apart. FAIL means a rule broke. NOT CHECKED means the tool could not verify something and says so. Exit code 1 means a FAIL, 2 means the input could not be used. `export` runs the same check, writes nothing if it fails, and otherwise writes the resume without the IDs.
+It reports two outcomes and keeps them apart. FAIL means a rule broke. NOT CHECKED means the tool could not verify something and says so. Exit code 1 means a FAIL, 2 means the input could not be used. `export` runs the same check, writes nothing if it fails, and otherwise writes the resume without the IDs. It writes only `.md`, `.markdown` or `.txt` files, never over a file it read and never through a symbolic link.
 
 ## Limits
 
 - It cannot tell whether a bullet's wording says what its fact says. It checks that the fact exists, that the numbers come from it and that known terms are supported. A line with nothing else to check is reported as NOT CHECKED.
 - It trusts your evidence file. It enforces that every fact has a source and a date. It cannot prove a fact is true.
 - A skill or tool is only checked if it is in your skill tags, the ledger or the job's gap file. A claim worded without one of those, or with an alias the ledger lacks, gets through. A term the agent leaves out of its own gap file is not guarded.
-- Role titles, employers and dates in headings are not checked.
+- Role titles, employers and dates in headings are not checked. A long plain sentence in the header block that has no skill and no figure is reported as NOT CHECKED, and a short one passes.
+- Lookalike letters from another script, such as a Cyrillic "a" in a skill name, are not detected. Invisible characters and fullwidth letters are.
+- It trusts `evidence.yaml` and `gap.md`. An agent that is steered into editing them can pass a false claim. Keep the evidence file under version control, read its diff, and treat a job description as untrusted text.
 - Quantities without digits ("doubled", "dozens") are reported as NOT CHECKED.
 - The model figure is one model, one persona and one run per job description, so it has no spread. Another model, or a persona whose evidence is less clear, may fabricate where this one did not.
 - The planted asks are missing skills. They are not stretched scope or rounded numbers.

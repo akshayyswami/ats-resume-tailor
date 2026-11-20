@@ -127,7 +127,7 @@ def test_duplicate_ids_stop_verify(persona: Evidence) -> None:
 
 
 def test_rule_names_are_unique() -> None:
-    assert len(ALL_RULES) == len(set(ALL_RULES)) == 18
+    assert len(ALL_RULES) == len(set(ALL_RULES)) == 21
 
 
 def test_check_evidence_is_clean_on_the_persona(persona: Evidence) -> None:
@@ -146,3 +146,60 @@ def test_adjacent_ledger_entries_are_checked_for_completeness(persona: Evidence)
     assert finding.rule == "adjacent-incomplete"
     assert "does not contain the term" in finding.message
     assert "E404" in finding.message
+
+
+def header_rules(text: str, bank: Evidence, *, status: str = "FAIL") -> list[tuple[str, int]]:
+    report = verify(text, bank)
+    return [(f.rule, f.line) for f in report.findings if f.status == status]
+
+
+BODY = "\n## Experience\n\n- Cut p95 latency from 900 ms to 240 ms. [E002]\n"
+
+
+def test_a_header_with_a_name_and_contact_details_passes(persona: Evidence) -> None:
+    contact = "+1 (555) 010-0199 | jordan.lee@example.com | Example City | linkedin.com/in/jordan"
+    assert header_rules(f"# Jordan Lee\n\n{contact}\n{BODY}", persona) == []
+
+
+def test_a_skill_a_figure_or_a_years_claim_in_the_header_fails(persona: Evidence) -> None:
+    for line in (
+        "Rust and Go engineer",
+        "Grew revenue by 900%",
+        "Saved $2M a year",
+        "Over 10 years of experience",
+        "Cut cost 3x",
+    ):
+        assert ("claim-in-header", 3) in header_rules(f"# Jordan Lee\n\n{line}\n{BODY}", persona)
+
+
+def test_a_bullet_or_sub_heading_before_the_first_section_fails(persona: Evidence) -> None:
+    for line in ("- Led a team", "### Backend Engineer"):
+        assert ("claim-in-header", 3) in header_rules(f"# Jordan Lee\n\n{line}\n{BODY}", persona)
+
+
+def test_a_long_header_line_with_nothing_to_check_is_reported_not_checked(
+    persona: Evidence,
+) -> None:
+    prose = "A thoughtful and careful engineer who enjoys clear writing and calm teams"
+    text = f"# Jordan Lee\n\n{prose}\n{BODY}"
+    assert header_rules(text, persona) == []
+    assert header_rules(text, persona, status="NOT_CHECKED")[0][0] == "header-prose"
+
+
+def test_a_resume_with_no_claim_lines_fails_instead_of_passing(persona: Evidence) -> None:
+    assert header_rules("# Jordan Lee\n\nexample city\n", persona) == [("no-claims", 0)]
+    assert ("no-claims", 0) in header_rules("# Jordan Lee\n\n### Role\n\nsome text\n", persona)
+    assert ("no-claims", 0) not in header_rules(f"# Jordan Lee\n\nexample city\n{BODY}", persona)
+    assert header_rules("## Skills\n\n- Python\n", persona) == []  # a skills list is a body
+
+
+def test_invisible_characters_fail_and_do_not_hide_the_word(persona: Evidence) -> None:
+    for hidden in ("​", "­", "⁠", "﻿", "‮"):
+        text = f"# Jordan Lee\n\n## Experience\n\n- Wrote Ru{hidden}st code. [E004]\n"
+        found = {rule for rule, _ in header_rules(text, persona)}
+        assert found == {"hidden-characters", "not-claimable-term"}, hidden
+
+
+def test_fullwidth_lookalikes_are_folded_before_matching(persona: Evidence) -> None:
+    text = "# Jordan Lee\n\n## Experience\n\n- Wrote \uff32ust code. [E004]\n"
+    assert ("not-claimable-term", 5) in header_rules(text, persona)

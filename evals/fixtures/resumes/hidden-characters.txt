@@ -1,0 +1,7 @@
+# Jordan Lee
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Built a Kafka consumer in Ru​st that ingested 1,200 events per second. [E004]

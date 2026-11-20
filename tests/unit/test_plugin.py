@@ -50,6 +50,19 @@ def test_every_command_has_a_description_and_the_three_expected_ones_exist() -> 
         assert "$ARGUMENTS" in path.read_text(encoding="utf-8"), path
 
 
+def test_the_commands_pre_approve_only_the_subcommand_they_need() -> None:
+    wanted = {
+        "verify": "Bash(ats-resume-tailor verify:*)",
+        "pdf-check": "Bash(ats-resume-tailor pdf-check:*)",
+    }
+    for name, grant in wanted.items():
+        meta = front_matter(ROOT / "commands" / f"{name}.md")
+        assert meta["allowed-tools"] == grant  # no export, no init, and no Read
+    assert "allowed-tools" not in front_matter(ROOT / "commands" / "tailor.md")
+    text = (ROOT / "commands" / "tailor.md").read_text(encoding="utf-8")
+    assert "untrusted" in text
+
+
 def test_the_skill_says_when_to_use_it_and_when_not_to() -> None:
     description = front_matter(ROOT / "skills" / "ats-resume-tailor" / "SKILL.md")["description"]
     assert description.startswith("Use when")
