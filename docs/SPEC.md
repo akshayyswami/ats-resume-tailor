@@ -1,0 +1,88 @@
+# ats-resume-tailor: spec
+
+## Thesis
+
+A resume tailor that can't make things up: every line traces to evidence you verified.
+
+## Problem
+
+AI resume tools invent things. Asked to match a job description, a model will claim the skill the job asks for. Telling it to "be honest" does not stop that, and nothing checks the result.
+
+## Who uses it
+
+Engineers tailoring a resume per application with Claude Code, Codex or Cursor, including people who already run a job-search pipeline such as career-ops and want a grounding layer on top of it.
+
+## v0.1 scope
+
+- `evidence.yaml`: verified facts with IDs (each with a source and a date), a capability ledger (claimable, adjacent only, not claimable), a banned-words list and a corrections list.
+- `check-evidence`: validates the bank itself.
+- `tailor` (skill): job description, then a gap table (HAVE, PARTIAL, MISSING), then the lead for this job, then an annotated resume with evidence IDs on every claim.
+- `verify` (code): checks the annotated resume against the bank. FAIL means a rule broke. NOT CHECKED means the tool could not verify something and says so.
+- `export` (code): refuses to run if `verify` fails, otherwise writes the resume with the evidence IDs stripped.
+- `pdf-check` (code): extracts the text of a PDF you supply and checks that it round-trips (the ATS copy-paste test).
+- A fictional sample persona with a full evidence bank, an annotated resume and sample job descriptions.
+
+## Non-goals
+
+- Finding jobs, scoring offers, tracking applications. career-ops does that well.
+- Making a weak resume look strong. It only says true things, as well as possible.
+- Proving a fact is true. The tool trusts the evidence bank. It enforces that every fact is marked verified, with a source and a date, and it refuses to cite one that is not.
+- Checking that a bullet's prose restates its fact faithfully. See Limits below.
+- Rendering a PDF. You bring your own; `pdf-check` tells you whether it survives text extraction.
+
+## Architecture
+
+The skill does the reasoning: gap table, lead, wording. The Python CLI does every check, and the skill must run `verify` before it shows a resume. `core/` is pure (parsing, numbers, terms, rules). `adapters/` reads files. `cli.py` is thin.
+
+### The annotated resume
+
+```
+# Name
+contact line
+
+## Experience
+### Role, Company (dates)
+- A claim, ending in the facts that support it. [E002, E004]
+
+## Skills
+- Python, PostgreSQL, Go
+```
+
+Rules the parser relies on: after the first `## ` heading, every non-blank line is a heading, a bullet that ends in `[E###, ...]`, or an item in the Skills section.
+
+### What `verify` checks
+
+Numbers are checked against the facts a bullet cites, not the whole bank, so a figure from one fact cannot be reused on another. Terms are checked against a lexicon built from the bank's skill tags and the ledger: every term found in a bullet has to be supported by the facts it cites, a not-claimable term fails anywhere, an adjacent-only term passes only in its sanctioned wording. A term outside the lexicon is not checked.
+
+## Limits
+
+`verify` cannot tell whether the prose of a bullet says what its fact says. It checks that the cited fact exists and is verified, that every number comes from the cited facts, and that known terms are supported. Bullets with nothing else to check are reported as NOT CHECKED. Role titles, employers and dates in headings are not checked. A claim worded without any lexicon term, or an alias missing from the ledger, gets through.
+
+## The number
+
+Two numbers, kept apart because one is code and one involves a model.
+
+1. **Planted faults caught.** Resumes and evidence banks with one known fault each, plus clean ones that must pass, run through the real checks. Offline and deterministic. Reproduce: `make evals`.
+2. **Fabrication on planted asks.** 20+ invented job descriptions that demand skills the persona does not have, 40+ asks in total. For the same model, count how many asks it claims under a plain "tailor my resume to this job" prompt, and how many under `tailor` with `verify`. Raw model outputs are saved in `evals/baseline/fabrication/` with the model id and date, and `make evals` recomputes the counts from them offline. The detector matches an alias list per ask, so it misses paraphrases that are not listed. Reported as counts, not only a percentage. M2.
+
+## Planted faults
+
+Two-sided, in `evals/faults.yaml`: every rule `verify` has needs a fault it must catch, and the clean inputs that must pass are the half that shows it is a checker and not a filter that rejects everything. `make evals` fails if a rule has no planted fault.
+
+## Milestones
+
+Vertical slices. Each has an acceptance test.
+
+- **M1: evidence and `verify`.** Evidence schema, annotated resume format, `check-evidence`, `verify`, the persona, the fault matrix. Acceptance: `check-evidence` exits 0 on the persona bank and 1 on each planted bank fault. `verify` exits 0 on the clean resume and every must-allow, and exits 1 naming the right rule on every must-catch. `make evals` exits non-zero on any miss or any rule without a fault.
+- **M2: `tailor` and the fabrication eval.** The skill, the gap file format, `export`, the baseline and tailor outputs. Acceptance: `export` output has no `[E` tags, and `export` of a failing resume exits non-zero and writes nothing. The detector flags every planted paraphrase in its fixture and leaves honest outputs alone. Both arms are recorded with model id and date.
+- **M3: `pdf-check`.** Acceptance: a one-column fixture PDF round-trips at or above a stated token-recall threshold. Two-column and image-text fixtures exit 1 with the rule name. A PDF with no extractable text exits 1.
+- **M4: packaging and release.** Plugin with `/tailor` and `/verify`, README with the number and a GIF, `oss-review` with no FAIL, v0.1.0. Acceptance: a fresh clone in a temp folder follows the Quickstart word for word.
+
+## Distribution
+
+Claude Code plugin (skill, `/tailor`, `/verify`). CLI on PyPI so `uvx ats-resume-tailor verify resume.md` works anywhere. Not published yet.
+
+## GitHub
+
+- Description: AI resume tailoring that never fabricates: every bullet traces to verified evidence. Skill + CLI.
+- Topics: ats, resume, resume-tailoring, ai-resume, job-search, llm, evals, agent-skills, claude-code, claude-code-plugin, codex, cursor, python
