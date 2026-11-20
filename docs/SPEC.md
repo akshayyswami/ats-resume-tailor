@@ -116,7 +116,7 @@ Vertical slices. Each has an acceptance test.
 
 ## Distribution
 
-Claude Code plugin: the `tailor` skill, three commands (`/ats-resume-tailor:tailor`, `:verify` and `:pdf-check`) and a `bin/ats-resume-tailor` wrapper that runs the bundled command with uv, so the plugin needs no PyPI package. The repo is its own marketplace (`.claude-plugin/marketplace.json`). The command also installs from GitHub with `uv tool install git+https://github.com/akshayyswami/ats-resume-tailor@v0.1.0`. PyPI, for `uvx ats-resume-tailor`, comes with the first release and needs a trusted publisher set up on PyPI first. Nothing is on PyPI yet.
+Claude Code plugin: the `tailor` skill, three commands (`/ats-resume-tailor:tailor`, `:verify` and `:pdf-check`) and a `bin/ats-resume-tailor` wrapper that runs the bundled command with uv, so the plugin needs no PyPI package. The repo is its own marketplace (`.claude-plugin/marketplace.json`). The command also installs from GitHub with `uv tool install git+https://github.com/akshayyswami/ats-resume-tailor@v0.1.0`. The package is also on PyPI as `ats-resume-tailor`, published by the release workflow through a trusted publisher, so `uvx ats-resume-tailor` works.
 
 ## GitHub
 

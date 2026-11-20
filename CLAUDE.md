@@ -21,4 +21,4 @@ Read first: `docs/SPEC.md` for scope and milestones.
 
 ## Current milestone
 
-M1 to M4 are done: the checker, the `tailor` skill, `export`, the gap file, the fabrication eval, `pdf-check`, and the plugin with its demo and trigger test. v0.1.0 is the first release. Publishing to PyPI, and any later tag or publish, needs Akshay's go. See `docs/SPEC.md`.
+M1 to M4 are done: the checker, the `tailor` skill, `export`, the gap file, the fabrication eval, `pdf-check`, and the plugin with its demo and trigger test. v0.1.0 is released, on GitHub and PyPI. Any later tag or publish needs Akshay's go. See `docs/SPEC.md`.

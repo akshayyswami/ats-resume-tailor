@@ -86,7 +86,7 @@ The Claude Code plugin, which adds the skill and three commands, `/ats-resume-ta
 /plugin install ats-resume-tailor@ats-resume-tailor
 ```
 
-It is not on PyPI, so `uvx ats-resume-tailor` does not work yet.
+It is also on PyPI, so `uvx ats-resume-tailor` and `uv tool install ats-resume-tailor` work too.
 
 ## How it works
 
