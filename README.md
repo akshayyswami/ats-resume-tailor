@@ -76,7 +76,7 @@ To start your own evidence file, run `uv run ats-resume-tailor init`, replace th
 The command, from GitHub:
 
 ```bash
-uv tool install git+https://github.com/akshayyswami/ats-resume-tailor
+uv tool install git+https://github.com/akshayyswami/ats-resume-tailor@v0.1.0
 ```
 
 The Claude Code plugin, which adds the skill and three commands, `/ats-resume-tailor:tailor`, `/ats-resume-tailor:verify` and `/ats-resume-tailor:pdf-check`. It needs `uv`, and it runs the bundled command, so nothing else has to be installed:

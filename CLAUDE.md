@@ -3,7 +3,6 @@
 Thesis: A resume tailor that can't make things up: every line traces to evidence you verified.
 
 Read first: `docs/SPEC.md` for scope and milestones.
-Private context, if present: `../../briefs/ats-resume-tailor.md`. Read it for intent. Never copy text from it into this repo.
 
 ## House rules (same in every repo)
 
@@ -22,4 +21,4 @@ Private context, if present: `../../briefs/ats-resume-tailor.md`. Read it for in
 
 ## Current milestone
 
-M1 to M4 are done: the checker, the `tailor` skill, `export`, the gap file, the fabrication eval, `pdf-check`, and the plugin with its demo and trigger test. What is left is the release, which needs Akshay's go for each outward step: the tag, the first push, any publish. See `docs/SPEC.md`.
+M1 to M4 are done: the checker, the `tailor` skill, `export`, the gap file, the fabrication eval, `pdf-check`, and the plugin with its demo and trigger test. v0.1.0 is the first release. Publishing to PyPI, and any later tag or publish, needs Akshay's go. See `docs/SPEC.md`.
