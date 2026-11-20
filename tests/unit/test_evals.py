@@ -11,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def _load_measure() -> ModuleType:
+    # `python evals/measure.py` has evals/ on the path; a test run has to add it.
+    if str(ROOT / "evals") not in sys.path:
+        sys.path.insert(0, str(ROOT / "evals"))
     spec = importlib.util.spec_from_file_location("measure", ROOT / "evals" / "measure.py")
     assert spec is not None
     assert spec.loader is not None
@@ -23,9 +26,9 @@ def _load_measure() -> ModuleType:
 def test_the_fault_matrix_is_perfect() -> None:
     counts, problems = _load_measure().fault_matrix()
     assert problems == []
-    assert counts["must_catch_caught"] == counts["must_catch_total"] == 20
-    assert counts["must_allow_passed"] == counts["must_allow_total"] == 6
-    assert counts["rules_covered"] == counts["rules_total"] == 17
+    assert counts["must_catch_caught"] == counts["must_catch_total"] == 23
+    assert counts["must_allow_passed"] == counts["must_allow_total"] == 8
+    assert counts["rules_covered"] == counts["rules_total"] == 18
 
 
 def test_measure_exits_zero_and_floors_are_checked() -> None:

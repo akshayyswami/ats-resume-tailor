@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Final, Literal
 
 from ats_resume_tailor.core.ai_tells import AI_TELLS
+from ats_resume_tailor.core.gaps import GapTable
 from ats_resume_tailor.core.models import Evidence, Fact
 from ats_resume_tailor.core.numbers import canonical_values, extract, quantity_words
 from ats_resume_tailor.core.resume import Line, parse
@@ -31,6 +32,7 @@ RESUME_RULES: Final = (
     "term-not-in-cited-evidence",
     "unsupported-skill",
     "known-wrong-claim",
+    "missing-requirement-claimed",
     "banned-word",
     "em-dash",
 )
@@ -124,6 +126,8 @@ def _term_findings(
     for fact in cited:
         cited_tags |= _resolved_tags(fact, lexicon)
     cited_ids = {fact.id for fact in cited}
+    # A term the cited fact itself says is supported, whether or not it is a tag on the fact.
+    cited_said = {term for fact in cited for term in lexicon.find(fact.text)}
     for term in terms:
         entry = lexicon.ledger.get(term)
         if entry is not None and entry.status == "not_claimable":
@@ -144,7 +148,7 @@ def _term_findings(
                         f"citing {', '.join(entry.supported_by) or 'a supporting fact'}",
                     )
                 )
-        elif term not in cited_tags:
+        elif term not in cited_tags and term not in cited_said:
             found.append(
                 Finding(
                     "term-not-in-cited-evidence",
@@ -263,10 +267,17 @@ def _skill_findings(line: Line, lexicon: Lexicon, bank_tags: set[str]) -> list[F
     return found
 
 
-def verify(text: str, evidence: Evidence) -> Report:
-    """Check an annotated resume against the bank. Raises EvidenceError on duplicate IDs."""
+def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Report:
+    """Check an annotated resume against the bank. Raises EvidenceError on duplicate IDs.
+
+    With a gap table, its terms join the lexicon, so a term no cited fact supports fails when a
+    bullet uses it, and a term of a MISSING requirement fails anywhere after the header block.
+    """
     index = evidence.fact_index()
-    lexicon = build_lexicon(evidence)
+    lexicon = build_lexicon(evidence, gaps.terms() if gaps is not None else ())
+    missing = (
+        {lexicon.resolve(term) for term in gaps.missing_terms()} if gaps is not None else set()
+    )
     banned = _banned_patterns(evidence)
     bank_tags: set[str] = set()
     for fact in evidence.facts:
@@ -278,6 +289,15 @@ def verify(text: str, evidence: Evidence) -> Report:
         findings.extend(_style_findings(line, banned, evidence))
         if line.kind == "header":
             continue
+        for term in lexicon.find(line.body):
+            if term in missing:
+                findings.append(
+                    Finding(
+                        "missing-requirement-claimed",
+                        line.number,
+                        f'"{term}" is marked MISSING in the gap file but appears here',
+                    )
+                )
         # A not-claimable term fails anywhere after the header block, headings included.
         if line.kind == "heading":
             unchecked_headings += 1 if line.level >= 3 else 0

@@ -38,6 +38,11 @@ def _split_ids(text: str) -> tuple[str, tuple[str, ...]]:
     return text[: match.start()].rstrip(), ids
 
 
+def strip_trailing_ids(raw: str) -> str:
+    """The line without its trailing `[...]` list."""
+    return _TRAILING_IDS.sub("", raw).rstrip()
+
+
 def is_skills_section(section: str) -> bool:
     return section == "skills" or section.endswith(" skills")
 

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from ats_resume_tailor.core.gaps import parse_gaps
 from ats_resume_tailor.core.models import Evidence, EvidenceError
 from ats_resume_tailor.core.verify import ALL_RULES, check_evidence, verify
 from tests.conftest import resume_with
@@ -33,6 +34,24 @@ def test_sanctioned_adjacent_wording_passes_only_with_a_supporting_fact(persona:
     assert rules(resume_with(f"- I {wording}. [E007]"), persona) == []
     # Same wording, but citing a fact the ledger does not name as support.
     assert "adjacent-term-overclaim" in rules(resume_with(f"- I {wording}. [E006]"), persona)
+
+
+def test_a_word_the_cited_fact_says_is_supported_even_when_it_is_not_a_tag(
+    persona: Evidence,
+) -> None:
+    gaps = parse_gaps(
+        "| Requirement | Status | Terms | Evidence |\n|---|---|---|---|\n"
+        "| Fewer pages | HAVE | on-call, retries | E008 |\n\nLead: E008, because of on-call.\n"
+    )
+    said = "- Reduced on-call pages by 30% with retries and backoff and an alert on queue depth."
+    said += " [E008]"
+    assert verify(resume_with(said), persona, gaps).ok
+    # The same word on a bullet whose cited fact does not say it is still a failure.
+    other = (
+        "- Cut p95 latency of the shipment lookup API from 900 ms to 240 ms with retries. [E002]"
+    )
+    failed = [f.rule for f in verify(resume_with(other), persona, gaps).failures]
+    assert failed == ["term-not-in-cited-evidence"]
 
 
 def test_adjacent_term_cannot_stand_alone_in_a_skills_list(persona: Evidence) -> None:
@@ -108,7 +127,7 @@ def test_duplicate_ids_stop_verify(persona: Evidence) -> None:
 
 
 def test_rule_names_are_unique() -> None:
-    assert len(ALL_RULES) == len(set(ALL_RULES)) == 17
+    assert len(ALL_RULES) == len(set(ALL_RULES)) == 18
 
 
 def test_check_evidence_is_clean_on_the_persona(persona: Evidence) -> None:

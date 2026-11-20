@@ -10,6 +10,7 @@ only in capitalised or upper case (`Go`, `GO`), so ordinary words like "go live"
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 
 from ats_resume_tailor.core.models import Evidence, LedgerEntry
@@ -60,7 +61,8 @@ class Lexicon:
         return found
 
 
-def build_lexicon(evidence: Evidence) -> Lexicon:
+def build_lexicon(evidence: Evidence, extra_terms: Iterable[str] = ()) -> Lexicon:
+    """The bank's terms, plus `extra_terms` such as the terms named in a gap file."""
     alias_to_term: dict[str, str] = {}
     ledger: dict[str, LedgerEntry] = {}
     for entry in evidence.ledger:
@@ -73,6 +75,10 @@ def build_lexicon(evidence: Evidence) -> Lexicon:
     for fact in evidence.facts:
         for tag in fact.skills:
             key = tag.strip().lower()
+            surfaces.setdefault(key, alias_to_term.get(key, key))
+    for extra in extra_terms:
+        key = extra.strip().lower()
+        if key:
             surfaces.setdefault(key, alias_to_term.get(key, key))
     ordered = sorted(surfaces.items(), key=lambda item: (-len(item[0]), item[0]))
     patterns = tuple((term, word_pattern(surface)) for surface, term in ordered)

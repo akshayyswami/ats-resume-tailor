@@ -93,3 +93,68 @@ def test_init_writes_a_bank_that_passes_and_never_overwrites(tmp_path: Path) -> 
     again = runner.invoke(app, ["init", str(path)])
     assert again.exit_code == 1
     assert path.read_text(encoding="utf-8") == "mine"
+
+
+def test_verify_with_a_gap_file(persona_path: Path, resume_path: Path, tmp_path: Path) -> None:
+    gaps = resume_path.parent / "gap.md"
+    ok = runner.invoke(app, ["verify", str(resume_path), "-e", str(persona_path), "-g", str(gaps)])
+    assert ok.exit_code == 0
+    bad = tmp_path / "gap.md"
+    bad.write_text(
+        gaps.read_text(encoding="utf-8").replace("| python, go |", "| MISSING | python |")
+    )
+    result = runner.invoke(
+        app, ["verify", str(resume_path), "-e", str(persona_path), "-g", str(bad)]
+    )
+    assert result.exit_code == 2
+    assert "expected 4 columns" in result.output
+
+
+def test_a_gap_file_that_names_a_missing_skill_makes_verify_fail(
+    persona_path: Path, resume_path: Path, tmp_path: Path
+) -> None:
+    gaps = tmp_path / "gap.md"
+    gaps.write_text(
+        "| Requirement | Status | Terms | Evidence |\n|---|---|---|---|\n| Go | MISSING | go | |\n"
+    )
+    result = runner.invoke(
+        app, ["verify", str(resume_path), "-e", str(persona_path), "-g", str(gaps)]
+    )
+    assert result.exit_code == 1
+    assert "missing-requirement-claimed" in result.stdout
+
+
+def test_export_writes_a_clean_resume_next_to_the_input_by_default(
+    persona_path: Path, resume_path: Path, tmp_path: Path
+) -> None:
+    copy = tmp_path / "resume.md"
+    copy.write_text(resume_path.read_text(encoding="utf-8"), encoding="utf-8")
+    result = runner.invoke(app, ["export", str(copy), "-e", str(persona_path)])
+    assert result.exit_code == 0
+    clean = tmp_path / "resume.clean.md"
+    assert clean.read_text(encoding="utf-8") == (resume_path.parent / "resume.clean.md").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_export_of_a_failing_resume_exits_1_and_writes_nothing(
+    persona_path: Path, tmp_path: Path
+) -> None:
+    resume = tmp_path / "resume.md"
+    resume.write_text("## Experience\n\n- Led a team of 40 engineers. [E005]\n", encoding="utf-8")
+    out = tmp_path / "out.md"
+    result = runner.invoke(app, ["export", str(resume), "-e", str(persona_path), "-o", str(out)])
+    assert result.exit_code == 1
+    assert "nothing written" in result.output
+    assert not out.exists()
+    assert not (tmp_path / "resume.clean.md").exists()
+
+
+def test_export_will_not_overwrite_the_annotated_resume(
+    persona_path: Path, resume_path: Path, tmp_path: Path
+) -> None:
+    copy = tmp_path / "resume.md"
+    copy.write_text(resume_path.read_text(encoding="utf-8"), encoding="utf-8")
+    result = runner.invoke(app, ["export", str(copy), "-e", str(persona_path), "-o", str(copy)])
+    assert result.exit_code == 2
+    assert "[E002]" in copy.read_text(encoding="utf-8")

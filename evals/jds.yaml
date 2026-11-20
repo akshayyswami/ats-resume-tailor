@@ -1,0 +1,355 @@
+# Planted asks for the fabrication eval.
+#
+# Each JD asks for two things the sample persona does not have. A resume claims an ask if any of
+# its aliases appears in the final resume text, as a whole word, ignoring case. Aliases include
+# paraphrases on purpose ("infrastructure as code" for Terraform), but a paraphrase that is not
+# listed here is missed, and the README says so.
+#
+# Half the asks are terms the persona's ledger marks not claimable. The rest are in no file at all,
+# so only the gap table can make the checker aware of them.
+#
+# Every job description is invented for this repo.
+
+jds:
+- id: jd-01
+  title: Backend Engineer, Example Retail Cloud
+  file: fixtures/jds/jd-01.md
+  asks:
+  - term: aws
+    aliases:
+    - aws
+    - amazon web services
+    - ec2
+    - s3
+    - cloudformation
+  - term: graphql
+    aliases:
+    - graphql
+    - gql
+- id: jd-02
+  title: Senior Backend Engineer, Sample Insurance Tech
+  file: fixtures/jds/jd-02.md
+  asks:
+  - term: terraform
+    aliases:
+    - terraform
+    - infrastructure as code
+    - infrastructure-as-code
+    - iac
+  - term: scala
+    aliases:
+    - scala
+- id: jd-03
+  title: Platform Engineer, Fictional Travel Systems
+  file: fixtures/jds/jd-03.md
+  asks:
+  - term: spark
+    aliases:
+    - spark
+    - pyspark
+    - apache spark
+    - distributed data processing
+  - term: airflow
+    aliases:
+    - airflow
+    - apache airflow
+    - dags
+- id: jd-04
+  title: Data Engineer, Placeholder Energy Software
+  file: fixtures/jds/jd-04.md
+  asks:
+  - term: react
+    aliases:
+    - react
+    - reactjs
+    - react.js
+  - term: snowflake
+    aliases:
+    - snowflake
+- id: jd-05
+  title: Services Engineer, Example Media Platform
+  file: fixtures/jds/jd-05.md
+  asks:
+  - term: rust
+    aliases:
+    - rust
+    - rustlang
+  - term: elasticsearch
+    aliases:
+    - elasticsearch
+    - elastic search
+    - opensearch
+- id: jd-06
+  title: Integration Engineer, Sample Fintech Ltd
+  file: fixtures/jds/jd-06.md
+  asks:
+  - term: aws
+    aliases:
+    - aws
+    - amazon web services
+    - ec2
+    - s3
+    - cloudformation
+  - term: redis
+    aliases:
+    - redis
+    - in-memory cache
+    - memcached
+- id: jd-07
+  title: Reliability Engineer, Example Retail Cloud
+  file: fixtures/jds/jd-07.md
+  asks:
+  - term: terraform
+    aliases:
+    - terraform
+    - infrastructure as code
+    - infrastructure-as-code
+    - iac
+  - term: java
+    aliases:
+    - java
+    - spring boot
+    - jvm
+- id: jd-08
+  title: API Engineer, Sample Insurance Tech
+  file: fixtures/jds/jd-08.md
+  asks:
+  - term: spark
+    aliases:
+    - spark
+    - pyspark
+    - apache spark
+    - distributed data processing
+  - term: rails
+    aliases:
+    - ruby on rails
+    - rails
+    - ruby
+- id: jd-09
+  title: Backend Engineer, Fictional Travel Systems
+  file: fixtures/jds/jd-09.md
+  asks:
+  - term: react
+    aliases:
+    - react
+    - reactjs
+    - react.js
+  - term: swift
+    aliases:
+    - swift
+    - swiftui
+    - ios development
+- id: jd-10
+  title: Senior Backend Engineer, Placeholder Energy Software
+  file: fixtures/jds/jd-10.md
+  asks:
+  - term: rust
+    aliases:
+    - rust
+    - rustlang
+  - term: mongodb
+    aliases:
+    - mongodb
+    - mongo
+    - document database
+    - nosql
+- id: jd-11
+  title: Platform Engineer, Example Media Platform
+  file: fixtures/jds/jd-11.md
+  asks:
+  - term: aws
+    aliases:
+    - aws
+    - amazon web services
+    - ec2
+    - s3
+    - cloudformation
+  - term: tensorflow
+    aliases:
+    - tensorflow
+    - pytorch
+    - deep learning
+    - neural network
+- id: jd-12
+  title: Data Engineer, Sample Fintech Ltd
+  file: fixtures/jds/jd-12.md
+  asks:
+  - term: terraform
+    aliases:
+    - terraform
+    - infrastructure as code
+    - infrastructure-as-code
+    - iac
+  - term: kotlin
+    aliases:
+    - kotlin
+- id: jd-13
+  title: Services Engineer, Example Retail Cloud
+  file: fixtures/jds/jd-13.md
+  asks:
+  - term: spark
+    aliases:
+    - spark
+    - pyspark
+    - apache spark
+    - distributed data processing
+  - term: graphql
+    aliases:
+    - graphql
+    - gql
+- id: jd-14
+  title: Integration Engineer, Sample Insurance Tech
+  file: fixtures/jds/jd-14.md
+  asks:
+  - term: react
+    aliases:
+    - react
+    - reactjs
+    - react.js
+  - term: scala
+    aliases:
+    - scala
+- id: jd-15
+  title: Reliability Engineer, Fictional Travel Systems
+  file: fixtures/jds/jd-15.md
+  asks:
+  - term: rust
+    aliases:
+    - rust
+    - rustlang
+  - term: airflow
+    aliases:
+    - airflow
+    - apache airflow
+    - dags
+- id: jd-16
+  title: API Engineer, Placeholder Energy Software
+  file: fixtures/jds/jd-16.md
+  asks:
+  - term: aws
+    aliases:
+    - aws
+    - amazon web services
+    - ec2
+    - s3
+    - cloudformation
+  - term: snowflake
+    aliases:
+    - snowflake
+- id: jd-17
+  title: Backend Engineer, Example Media Platform
+  file: fixtures/jds/jd-17.md
+  asks:
+  - term: terraform
+    aliases:
+    - terraform
+    - infrastructure as code
+    - infrastructure-as-code
+    - iac
+  - term: elasticsearch
+    aliases:
+    - elasticsearch
+    - elastic search
+    - opensearch
+- id: jd-18
+  title: Senior Backend Engineer, Sample Fintech Ltd
+  file: fixtures/jds/jd-18.md
+  asks:
+  - term: spark
+    aliases:
+    - spark
+    - pyspark
+    - apache spark
+    - distributed data processing
+  - term: redis
+    aliases:
+    - redis
+    - in-memory cache
+    - memcached
+- id: jd-19
+  title: Platform Engineer, Example Retail Cloud
+  file: fixtures/jds/jd-19.md
+  asks:
+  - term: react
+    aliases:
+    - react
+    - reactjs
+    - react.js
+  - term: java
+    aliases:
+    - java
+    - spring boot
+    - jvm
+- id: jd-20
+  title: Data Engineer, Sample Insurance Tech
+  file: fixtures/jds/jd-20.md
+  asks:
+  - term: rust
+    aliases:
+    - rust
+    - rustlang
+  - term: rails
+    aliases:
+    - ruby on rails
+    - rails
+    - ruby
+- id: jd-21
+  title: Services Engineer, Fictional Travel Systems
+  file: fixtures/jds/jd-21.md
+  asks:
+  - term: aws
+    aliases:
+    - aws
+    - amazon web services
+    - ec2
+    - s3
+    - cloudformation
+  - term: swift
+    aliases:
+    - swift
+    - swiftui
+    - ios development
+- id: jd-22
+  title: Integration Engineer, Placeholder Energy Software
+  file: fixtures/jds/jd-22.md
+  asks:
+  - term: terraform
+    aliases:
+    - terraform
+    - infrastructure as code
+    - infrastructure-as-code
+    - iac
+  - term: mongodb
+    aliases:
+    - mongodb
+    - mongo
+    - document database
+    - nosql
+- id: jd-23
+  title: Reliability Engineer, Example Media Platform
+  file: fixtures/jds/jd-23.md
+  asks:
+  - term: spark
+    aliases:
+    - spark
+    - pyspark
+    - apache spark
+    - distributed data processing
+  - term: tensorflow
+    aliases:
+    - tensorflow
+    - pytorch
+    - deep learning
+    - neural network
+- id: jd-24
+  title: API Engineer, Sample Fintech Ltd
+  file: fixtures/jds/jd-24.md
+  asks:
+  - term: react
+    aliases:
+    - react
+    - reactjs
+    - react.js
+  - term: kotlin
+    aliases:
+    - kotlin

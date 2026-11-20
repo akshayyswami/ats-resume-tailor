@@ -96,6 +96,26 @@ must_catch:
     expect_rule: em-dash
     reason: contains an em dash
 
+  # Resume faults: the gap file
+  - id: missing-requirement-claimed
+    kind: resume
+    gaps: fixtures/gaps/graphql-airflow.md
+    input: fixtures/resumes/missing-requirement-claimed.txt
+    expect_rule: missing-requirement-claimed
+    reason: the gap file marks GraphQL MISSING and the bullet claims it
+  - id: gap-term-not-in-cited-evidence
+    kind: resume
+    gaps: fixtures/gaps/graphql-airflow.md
+    input: fixtures/resumes/gap-term-not-in-cited-evidence.txt
+    expect_rule: term-not-in-cited-evidence
+    reason: Airflow is named only by the gap file, and the cited fact does not support it
+  - id: term-in-other-fact-text
+    kind: resume
+    gaps: fixtures/gaps/everyday-words.md
+    input: fixtures/resumes/term-in-other-fact-text.txt
+    expect_rule: term-not-in-cited-evidence
+    reason: retries is in the gap file and in another fact's text, but not in the fact this bullet cites
+
   # Evidence bank faults
   - id: duplicate-id
     kind: bank
@@ -148,3 +168,13 @@ must_allow:
     kind: resume
     input: fixtures/resumes/ok-short-term-case.txt
     reason: the verb "go" in lower case is not the language Go
+  - id: gap-honest-resume
+    kind: resume
+    gaps: ../examples/persona/gap.md
+    input: ../examples/persona/resume.md
+    reason: the sample resume against its own gap file, with GraphQL and Terraform left out
+  - id: gap-term-in-fact-text
+    kind: resume
+    gaps: fixtures/gaps/everyday-words.md
+    input: fixtures/resumes/ok-gap-term-in-fact-text.txt
+    reason: a bullet that restates its fact word for word passes when the gap file names a word the fact says

@@ -1,0 +1,9 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Replaced 3 hand-run scripts with one scheduled Airflow pipeline that saves about 5 hours of analyst time per week. [E010]

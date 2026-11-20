@@ -7,6 +7,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
+from ats_resume_tailor.core.gaps import GapError, GapTable, parse_gaps
 from ats_resume_tailor.core.models import Evidence, EvidenceError
 
 
@@ -15,6 +16,14 @@ def read_text(path: Path) -> str:
         return path.read_text(encoding="utf-8")
     except OSError as exc:
         raise EvidenceError(f"cannot read {path}: {exc.strerror or exc}") from exc
+
+
+def load_gaps(path: Path) -> GapTable:
+    """Parse a gap file. Raises GapError, which is an EvidenceError, on a malformed table."""
+    try:
+        return parse_gaps(read_text(path))
+    except GapError as exc:
+        raise GapError(f"{path}: {exc}") from exc
 
 
 def load_evidence(path: Path) -> Evidence:

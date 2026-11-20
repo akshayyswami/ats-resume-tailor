@@ -1,0 +1,9 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Cut p95 latency of the shipment lookup API from 900 ms to 240 ms with retries. [E002]

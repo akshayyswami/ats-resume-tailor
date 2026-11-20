@@ -1,0 +1,10 @@
+# Jordan Lee
+
+jordan.lee@example.com
+
+## Experience
+
+### Backend Engineer, Example Freight Co (2021 to 2024)
+
+- Reduced on-call pages by 30% with retries and backoff and an alert on queue depth. [E008]
+- Wrote the onboarding guide used by 12 new engineers. [E011]

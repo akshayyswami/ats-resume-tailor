@@ -18,8 +18,9 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from fabrication import detector_cases, load_jds, score
 
-from ats_resume_tailor.adapters.files import load_evidence, read_text
+from ats_resume_tailor.adapters.files import load_evidence, load_gaps, read_text
 from ats_resume_tailor.core.models import EvidenceError
 from ats_resume_tailor.core.verify import ALL_RULES, Finding, check_evidence, verify
 
@@ -37,7 +38,8 @@ def _run(entry: dict[str, Any]) -> list[Finding]:
     if entry["kind"] == "bank":
         return check_evidence(load_evidence(target))
     bank = EVALS / entry["bank"] if "bank" in entry else PERSONA_BANK
-    return verify(read_text(target), load_evidence(bank)).failures
+    gaps = load_gaps(EVALS / entry["gaps"]) if "gaps" in entry else None
+    return verify(read_text(target), load_evidence(bank), gaps).failures
 
 
 def fault_matrix() -> tuple[dict[str, Any], list[str]]:
@@ -90,7 +92,16 @@ def measure() -> tuple[dict[str, object], list[str]]:
     """Return every figure the README quotes, and any problems that must fail the run."""
     faults, problems = fault_matrix()
     persona = load_evidence(PERSONA_BANK)
-    return {"faults": faults, "persona": {"facts": len(persona.facts)}}, problems
+    jds = load_jds(EVALS)
+    detector, detector_problems = detector_cases(EVALS, jds)
+    fabrication, fabrication_problems = score(EVALS, jds, persona)
+    results: dict[str, object] = {
+        "faults": faults,
+        "persona": {"facts": len(persona.facts)},
+        "detector": detector,
+        "fabrication": fabrication,
+    }
+    return results, problems + detector_problems + fabrication_problems
 
 
 def violations(results: dict[str, object]) -> list[str]:
