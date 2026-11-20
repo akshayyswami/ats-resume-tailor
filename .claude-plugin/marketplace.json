@@ -1,0 +1,12 @@
+{
+  "name": "ats-resume-tailor",
+  "owner": { "name": "Akshay Swaminathan" },
+  "description": "A resume tailor that can't make things up: every line traces to evidence you verified.",
+  "plugins": [
+    {
+      "name": "ats-resume-tailor",
+      "source": "./",
+      "description": "Tailor a resume to a job description from verified evidence. The agent drafts, the command checks every claim and every PDF."
+    }
+  ]
+}

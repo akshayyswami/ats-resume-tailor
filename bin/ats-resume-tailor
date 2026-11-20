@@ -1,0 +1,23 @@
+#!/bin/sh
+# Runs the ats-resume-tailor command from this plugin's own copy of the project.
+#
+# Claude Code puts a plugin's bin/ folder on the Bash tool's PATH while the plugin is enabled, so
+# the skill and the commands can call `ats-resume-tailor` with nothing installed but uv. The
+# virtual environment lives in the user's cache folder, not in the plugin folder, which changes on
+# every update. Relative paths in the arguments resolve against the caller's working folder.
+set -eu
+
+root=$(cd "$(dirname "$0")/.." && pwd -P)
+
+if [ ! -f "$root/pyproject.toml" ]; then
+  echo "ats-resume-tailor: this copy of the plugin has no Python project. Install the command with:" >&2
+  echo "  uv tool install git+https://github.com/akshayyswami/ats-resume-tailor" >&2
+  exit 2
+fi
+if ! command -v uv >/dev/null 2>&1; then
+  echo "ats-resume-tailor: uv is required. Install it from https://docs.astral.sh/uv/" >&2
+  exit 2
+fi
+
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/ats-resume-tailor"
+UV_PROJECT_ENVIRONMENT="$cache/venv" exec uv run --frozen --no-dev --quiet --project "$root" ats-resume-tailor "$@"

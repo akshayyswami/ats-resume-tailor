@@ -7,7 +7,7 @@
 
 A CLI and agent skill for tailoring an ATS-friendly resume to a job description with an AI agent such as Claude Code, Codex or Cursor. The agent drafts. The CLI checks each claim against an evidence file you verified, so a resume cannot say a skill, number or result you cannot back up.
 
-> Status: pre-alpha, milestone 3 of 4. The evidence file, the checker, the `tailor` skill, `export`, the PDF check and the fabrication measurement work. The plugin packaging, the demo and the release are not done, and it is not on PyPI. See [docs/SPEC.md](docs/SPEC.md).
+![Terminal demo: verify rejects a resume whose number is not in its evidence, pdf-check rejects a two-column PDF and passes a one-column one](docs/demo.gif)
 
 ## The number
 
@@ -59,32 +59,48 @@ CI re-measures every figure in this README on each push and fails if one differs
 - **Why a header check:** `image-header` keeps <!-- eval:pdf.fixtures.image-header.stream.token:.1% -->96.0%<!-- /eval --> of the words as text, which passes the token threshold, but only <!-- eval:pdf.fixtures.image-header.stream.header:.1% -->12.5%<!-- /eval --> of the name and contact words. An ATS needs those, so they are checked on their own.
 - **Reproduce:** `make evals`. It is offline and deterministic. `evals/make_pdf_fixtures.py` regenerates the PDFs and needs the development dependencies.
 
-## Demo
-
-A terminal recording goes here once the plugin is packaged.
-
 ## Quickstart
 
 ```bash
 git clone https://github.com/akshayyswami/ats-resume-tailor && cd ats-resume-tailor
-uv sync
 uv run ats-resume-tailor verify examples/persona/resume.md -e examples/persona/evidence.yaml -g examples/persona/gap.md
-uv run ats-resume-tailor export examples/persona/resume.md -e examples/persona/evidence.yaml -g examples/persona/gap.md -o resume.clean.md
+uv run ats-resume-tailor pdf-check evals/fixtures/pdfs/one-column.pdf -s examples/persona/resume.clean.md
 ```
 
-You need [uv](https://docs.astral.sh/uv/). The first command prints `verify: ok`. The second writes `resume.clean.md`, the resume without its evidence IDs. Not on PyPI yet.
+You need [uv](https://docs.astral.sh/uv/). The second command prints `verify: ok` and the third prints `pdf-check: ok`. Swap in `evals/fixtures/pdfs/two-column.pdf` to see a failure name its rule.
 
-To check a PDF made from that resume:
+To start your own evidence file, run `uv run ats-resume-tailor init`, replace the example fact, and check it with `uv run ats-resume-tailor check-evidence evidence.yaml`. `export` writes the resume without its evidence IDs, and `pdf-check` takes the PDF you make from that file. The tool does not render PDFs.
+
+## Install
+
+The command, from GitHub:
 
 ```bash
-uv run ats-resume-tailor pdf-check evals/fixtures/pdfs/one-column.pdf -s resume.clean.md
+uv tool install git+https://github.com/akshayyswami/ats-resume-tailor
 ```
 
-That prints `pdf-check: ok`. The tool does not render PDFs. Make yours with any tool, then check it against the exported resume.
+The Claude Code plugin, which adds the skill and three commands, `/ats-resume-tailor:tailor`, `/ats-resume-tailor:verify` and `/ats-resume-tailor:pdf-check`. It needs `uv`, and it runs the bundled command, so nothing else has to be installed:
 
-To start your own evidence file, run `uv run ats-resume-tailor init`, replace the example fact, and check it with `uv run ats-resume-tailor check-evidence evidence.yaml`. To have an agent tailor a resume, give it `skills/ats-resume-tailor/SKILL.md`, your `evidence.yaml` and the job description. Plugin packaging comes in milestone 4.
+```text
+/plugin marketplace add akshayyswami/ats-resume-tailor
+/plugin install ats-resume-tailor@ats-resume-tailor
+```
+
+It is not on PyPI, so `uvx ats-resume-tailor` does not work yet.
 
 ## How it works
+
+```mermaid
+flowchart LR
+    E[evidence.yaml<br>verified facts] --> T[tailor skill]
+    J[job description] --> T
+    T --> G[gap.md and<br>annotated resume]
+    G --> V{verify}
+    V -- FAIL --> T
+    V -- ok --> X[export<br>resume.clean.md]
+    X --> P[your PDF]
+    P --> C{pdf-check}
+```
 
 You keep an `evidence.yaml`: facts, each with a source and a date you checked it, a ledger of what you may claim, and a list of claims you have got wrong before. For each job the agent writes a gap file, one row per requirement marked HAVE, PARTIAL or MISSING with the terms it names, and then a resume that puts the IDs of the facts behind each line at its end:
 
@@ -116,6 +132,7 @@ It reports two outcomes and keeps them apart. FAIL means a rule broke. NOT CHECK
 - The PDF check reads files with pypdf, in two orders. A pass means the text survives those two readings. It does not mean your target ATS parses the file.
 - The PDF thresholds were set on the fixtures above, which come from one 200-word resume. PDFs from word processors may score differently, so the command prints the measured values and a result near a threshold needs a human look.
 - It does not check fonts, hyphenation at line ends, tables, headers and footers, or whether a scan's text is right. A scan with no text layer is reported as having no extractable text. An encrypted or damaged PDF exits 2, because the tool could not check it.
+- The skill's description was tested on seven requests, two runs each, with one model, in a session that had few other skills. That says nothing about a session crowded with other plugins. The result is in `skill-evals/last-run.json`.
 - The persona is invented. The checker has not been run against real resumes at scale.
 
 ## Development

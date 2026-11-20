@@ -2,8 +2,20 @@
   "name": "ats-resume-tailor",
   "description": "A resume tailor that can't make things up: every line traces to evidence you verified.",
   "version": "0.1.0",
-  "author": { "name": "Akshay Swaminathan" },
+  "author": {
+    "name": "Akshay Swaminathan"
+  },
   "homepage": "https://github.com/akshayyswami/ats-resume-tailor",
   "repository": "https://github.com/akshayyswami/ats-resume-tailor",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "resume",
+    "ats",
+    "job-search",
+    "evals",
+    "agent-skills"
+  ],
+  "experimental": {
+    "evals": "skill-evals"
+  }
 }

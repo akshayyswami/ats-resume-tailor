@@ -15,3 +15,4 @@ build/
 .env.*
 !.env.example
 CLAUDE.local.md
+skill-evals/results/

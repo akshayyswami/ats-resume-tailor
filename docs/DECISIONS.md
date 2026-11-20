@@ -2,6 +2,28 @@
 
 One entry per decision that changes architecture or scope. Newest first.
 
+## 2026-11-20: the trigger test runs in a clean session, not in `claude plugin eval`
+
+- **Decision:** `evals/run_trigger.py` runs the seven cases in `skill-evals/` through `claude -p` with project settings only, no MCP servers and this plugin as the only extra source of skills. The cases keep the format `claude plugin eval` reads, so anyone can run that tool too. `skill-evals/last-run.json` holds the result and a hash of every description, and a test fails if a description changes without a new run.
+- **Why:** one run of `claude plugin eval` cost 0.23 USD and ran with my other plugins and MCP servers loaded, so the skill competed with dozens of unrelated ones and the result could not be reproduced. A clean config directory cannot authenticate without logging in. The harness costs about 0.04 USD a run and records which skills the session could see: Claude Code's built-in skills and this plugin.
+- **Result:** with `claude-sonnet-5-5`, two runs per case, all 14 runs passed. The three requests that should fire the skill did, one of them through `/ats-resume-tailor:verify`, and the four that should not did not.
+- **Disclosure:** two things were changed after seeing a result. A first probe showed the model choosing the plugin's `/verify` command for "check my resume against my evidence", which the original grader rejected because it accepted only the main skill. The fires graders now accept any of the plugin's skills or commands. The quiet graders now forbid only this plugin's skills, so an unrelated built-in such as `debug` firing is not a failure here.
+- **Limits:** seven cases, two runs, one model, and a session with few skills. It says nothing about a session crowded with other plugins.
+- **Alternatives:** the official runner in my own environment. Rejected for cost and for the contamination.
+
+## 2026-11-20: the plugin runs the bundled command through `bin/`, and the skill text stays frozen
+
+- **Decision:** `bin/ats-resume-tailor` is a shell wrapper. Claude Code puts a plugin's `bin/` on the Bash tool's PATH, so the skill's own instruction to run `ats-resume-tailor` works after a plugin install with only uv present. The wrapper runs `uv run --frozen --no-dev` against the project one folder up and keeps the virtualenv in the user's cache folder, not in the plugin folder that changes on every update. The body of `SKILL.md` is not edited. Only its `description:` line changed, to add what the skill is not for.
+- **Why:** the 96 recorded fabrication runs were made from the skill's text with its front matter removed, and the prompt hashes in the manifest still match. Editing the steps would make the baseline describe a different skill. A command found on PATH also removes the need for a PyPI package at release.
+- **Commands, not skills, for the wrappers:** `/verify` and `/pdf-check` are `commands/*.md`. The main skill's folder is read by path in the fabrication runner, so it stays where it is, and the docs list commands as supported.
+- **Alternatives:** change the skill's fallback line to `uvx ats-resume-tailor`. Rejected: it needs PyPI and it changes the frozen text. Tell users to install the command first. Kept as a second route in the README.
+
+## 2026-11-20: the repo is its own marketplace
+
+- **Decision:** `.claude-plugin/marketplace.json` names a marketplace `ats-resume-tailor` with one plugin whose source is `./`. Install is `/plugin marketplace add akshayyswami/ats-resume-tailor` and then `/plugin install ats-resume-tailor@ats-resume-tailor`. The one-command form needs a newer Claude Code than 2.1.273.
+- **Why:** a user can install from the repo with no other repository to create or maintain. The public `agent-skills` marketplace repo is a separate decision that needs its own go.
+- **Known mismatch:** `claude plugin tag` writes `ats-resume-tailor--v0.1.0`, while `release.yml` and the audit look for `v*` tags. A release needs both tags.
+
 ## 2026-11-20: the header words must all come back
 
 - **Decision:** `pdf-check` also measures header recall, the share of the words before the first `## ` heading that come back, and fails below 100%. A shortfall there fires `text-in-images` if the file has images, or `low-token-recall` if not.

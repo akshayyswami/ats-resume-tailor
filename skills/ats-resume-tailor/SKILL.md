@@ -1,6 +1,6 @@
 ---
 name: ats-resume-tailor
-description: Use when tailoring a resume to a job description from a verified evidence file (evidence.yaml), or when checking a resume for claims its evidence does not support. Drafts a gap table and an annotated resume, then runs the ats-resume-tailor command to verify and export it.
+description: Use when tailoring a resume to a job description from a verified evidence file (evidence.yaml), or when checking a resume for claims its evidence does not support. Drafts a gap table and an annotated resume, then runs the ats-resume-tailor command to verify and export it. Do not use for cover letters, finding jobs, resume formatting tips, or any resume work where there is no evidence file.
 ---
 
 # ats-resume-tailor

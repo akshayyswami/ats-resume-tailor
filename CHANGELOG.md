@@ -20,6 +20,11 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - `pdf-check`: reads a PDF with pypdf in drawing order and in visual line order and compares it with the exported resume. Four rules: `no-extractable-text`, `text-in-images`, `low-token-recall` and `reading-order-broken`. Exit 0 passes, 1 fails a rule, 2 means the PDF or source could not be used.
 - Nine fixture PDFs rendered from the invented persona, each with one fault, and `evals/make_pdf_fixtures.py` to regenerate them.
 - Planted faults for the four PDF rules: 30 must-catch, 10 must-allow, 22 rules in all.
+- The plugin: `commands/tailor.md`, `verify.md` and `pdf-check.md`, a `bin/ats-resume-tailor` wrapper that runs the bundled command with uv, and `.claude-plugin/marketplace.json`, so the repo is its own marketplace.
+- A trigger test for the skill description: seven cases in `skill-evals/`, `evals/run_trigger.py`, and the recorded run in `skill-evals/last-run.json`. A test fails if a description changes without a new run.
+- A terminal demo, `docs/demo.gif`, recorded with vhs from `docs/demo.tape`.
+- README: an Install section, a diagram under How it works, and a three-command Quickstart.
+- The skill's description says what it is not for. Its steps are unchanged, so the fabrication baseline still applies.
 
 ### Fixed
 
