@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+
+- The release workflow checks that the tag matches the `pyproject.toml` and `plugin.json` versions and is on `main`, and every GitHub Action is pinned by commit SHA.
+
 ## [0.1.0] - 2026-11-20
 
 ### Added
