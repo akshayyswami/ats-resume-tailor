@@ -22,4 +22,4 @@ Private context, if present: `../../briefs/ats-resume-tailor.md`. Read it for in
 
 ## Current milestone
 
-M1 and M2 are done: the checker, the `tailor` skill, `export`, the gap file and the fabrication eval from saved model outputs. Next is M3: `pdf-check`. See `docs/SPEC.md`.
+M1, M2 and M3 are done: the checker, the `tailor` skill, `export`, the gap file, the fabrication eval from saved model outputs, and `pdf-check`. Next is M4: plugin packaging, the README demo, `oss-review` and v0.1.0. See `docs/SPEC.md`.

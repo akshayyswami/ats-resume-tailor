@@ -6,6 +6,7 @@
 #
 # kind: resume runs `verify` on a fixture resume against `bank` (default: the persona bank).
 # kind: bank runs `check-evidence` on the fixture bank.
+# kind: pdf runs `pdf-check` on a fixture PDF against `source`, the resume it was made from.
 # Paths are relative to this directory. Fixture resumes use .txt so the repo's own markdown
 # writing check does not flag the em dash and banned words planted in them.
 #
@@ -116,6 +117,50 @@ must_catch:
     expect_rule: term-not-in-cited-evidence
     reason: retries is in the gap file and in another fact's text, but not in the fact this bullet cites
 
+  # PDF faults
+  - id: pdf-no-extractable-text-blank
+    kind: pdf
+    input: fixtures/pdfs/blank.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: no-extractable-text
+    reason: an empty page has no text at all
+  - id: pdf-no-extractable-text-image-only
+    kind: pdf
+    input: fixtures/pdfs/image-only.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: no-extractable-text
+    reason: the whole resume is a picture of text, so the file has no text to read
+  - id: pdf-text-in-images-header
+    kind: pdf
+    input: fixtures/pdfs/image-header.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: text-in-images
+    reason: the name and contact lines are a picture. Overall recall is 96 percent, so only the header check catches it
+  - id: pdf-text-in-images-section
+    kind: pdf
+    input: fixtures/pdfs/image-section.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: text-in-images
+    reason: the second job and the Skills list are a picture, so a fifth of the words are missing
+  - id: pdf-low-token-recall
+    kind: pdf
+    input: fixtures/pdfs/half-resume.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: low-token-recall
+    reason: the PDF holds only the first half of the resume and has no images
+  - id: pdf-reading-order-broken
+    kind: pdf
+    input: fixtures/pdfs/two-column.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: reading-order-broken
+    reason: two columns read clean in drawing order and interleave when read by visual line
+  - id: pdf-reading-order-broken-stream
+    kind: pdf
+    input: fixtures/pdfs/stream-scrambled.pdf
+    source: ../examples/persona/resume.clean.md
+    expect_rule: reading-order-broken
+    reason: a column drawn bottom to top looks right and reads in reverse in drawing order
+
   # Evidence bank faults
   - id: duplicate-id
     kind: bank
@@ -178,3 +223,13 @@ must_allow:
     gaps: fixtures/gaps/everyday-words.md
     input: fixtures/resumes/ok-gap-term-in-fact-text.txt
     reason: a bullet that restates its fact word for word passes when the gap file names a word the fact says
+  - id: pdf-one-column
+    kind: pdf
+    input: fixtures/pdfs/one-column.pdf
+    source: ../examples/persona/resume.clean.md
+    reason: a single-column PDF of the resume comes back whole in both reading orders
+  - id: pdf-one-column-with-logo
+    kind: pdf
+    input: fixtures/pdfs/one-column-with-logo.pdf
+    source: ../examples/persona/resume.clean.md
+    reason: a decorative image alone is not a failure when every word still comes back

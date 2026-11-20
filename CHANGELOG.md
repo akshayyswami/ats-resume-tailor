@@ -17,6 +17,9 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - The fabrication eval: 24 invented job descriptions with 48 planted asks, a detector with its own planted cases, and `evals/run_fabrication.py`, which records raw model outputs for four arms (`plain`, `plain-pushed`, `evidence-only-pushed`, `gated-pushed`). `make evals` recomputes the counts from the saved outputs, offline.
 - A second count in the fabrication eval: resumes whose Skills list names a term the ledger marks adjacent only.
 - Planted cases for the two behaviours found by the first full run: a bullet that restates its fact passes when the gap file names a word the fact says, and the detector ignores a model's trailing note.
+- `pdf-check`: reads a PDF with pypdf in drawing order and in visual line order and compares it with the exported resume. Four rules: `no-extractable-text`, `text-in-images`, `low-token-recall` and `reading-order-broken`. Exit 0 passes, 1 fails a rule, 2 means the PDF or source could not be used.
+- Nine fixture PDFs rendered from the invented persona, each with one fault, and `evals/make_pdf_fixtures.py` to regenerate them.
+- Planted faults for the four PDF rules: 30 must-catch, 10 must-allow, 22 rules in all.
 
 ### Fixed
 

@@ -19,7 +19,7 @@ Engineers tailoring a resume per application with Claude Code, Codex or Cursor, 
 - `tailor` (skill): job description, then a gap table (HAVE, PARTIAL, MISSING), then the lead for this job, then an annotated resume with evidence IDs on every claim.
 - `verify` (code): checks the annotated resume against the bank, and against the job's gap file when given. FAIL means a rule broke. NOT CHECKED means the tool could not verify something and says so.
 - `export` (code): refuses to run if `verify` fails, otherwise writes the resume with the evidence IDs stripped.
-- `pdf-check` (code): extracts the text of a PDF you supply and checks that it round-trips (the ATS copy-paste test).
+- `pdf-check` (code): extracts the text of a PDF you supply, in two reading orders, and checks that it round-trips against the exported resume (the ATS copy-paste test). Exit 0 passes, 1 means a rule failed, 2 means the PDF or the source could not be used.
 - A fictional sample persona with a full evidence bank, an annotated resume and sample job descriptions.
 
 ## Non-goals
@@ -71,9 +71,20 @@ Numbers are checked against the facts a bullet cites, not the whole bank, so a f
 
 With `--gaps`, every term in the gap table joins the lexicon, so a skill the persona lacks and the ledger never mentioned still fails when a bullet claims it. A term of a MISSING requirement fails anywhere after the header block.
 
+### What `pdf-check` checks
+
+The input is the PDF and the exported clean resume it was made from. The tool does not render PDFs. It reads the PDF with pypdf in two orders, the order the file draws its text and visual line order, and compares each with the resume's words. Four rules, each with a planted fault:
+
+- `no-extractable-text`: fewer than 20 words come back. Blank and image-only pages.
+- `text-in-images`: the file has images and either token recall is under 95% or a word of the header block is missing. The header block is every line before the first `## ` heading, the name and contact lines.
+- `low-token-recall`: the same shortfall with no images in the file.
+- `reading-order-broken`: token and header recall pass but word-pair recall is under 95% in either order.
+
+An image alone is not a failure. The thresholds, 95%, 100% for the header and 95%, were set on the fixtures in `evals/fixtures/pdfs/`, and every run prints the measured values.
+
 ## Limits
 
-`verify` cannot tell whether the prose of a bullet says what its fact says. It checks that the cited fact exists and is verified, that every number comes from the cited facts, and that known terms are supported. Bullets with nothing else to check are reported as NOT CHECKED. Role titles, employers and dates in headings are not checked. A claim worded without any lexicon term, or an alias missing from the ledger, gets through. A term the model leaves out of its own gap table is not guarded.
+`verify` cannot tell whether the prose of a bullet says what its fact says. It checks that the cited fact exists and is verified, that every number comes from the cited facts, and that known terms are supported. Bullets with nothing else to check are reported as NOT CHECKED. Role titles, employers and dates in headings are not checked. A claim worded without any lexicon term, or an alias missing from the ledger, gets through. A term the model leaves out of its own gap table is not guarded. `pdf-check` shows that text survives two readings, not that a given ATS parses the file, and its thresholds come from fixtures built from one short resume. It does not check fonts, hyphenation at line ends, tables, or headers and footers.
 
 ## The number
 
@@ -98,7 +109,7 @@ Vertical slices. Each has an acceptance test.
 
 - **M1: evidence and `verify`.** Evidence schema, annotated resume format, `check-evidence`, `verify`, the persona, the fault matrix. Acceptance: `check-evidence` exits 0 on the persona bank and 1 on each planted bank fault. `verify` exits 0 on the clean resume and every must-allow, and exits 1 naming the right rule on every must-catch. `make evals` exits non-zero on any miss or any rule without a fault.
 - **M2: `tailor` and the fabrication eval.** The skill, the gap file format, `export`, the baseline and tailor outputs. Acceptance: `export` output has no `[E` tags, and `export` of a failing resume exits non-zero and writes nothing. The detector flags every planted paraphrase in its fixture and leaves honest outputs alone. All four arms are recorded with model id and date.
-- **M3: `pdf-check`.** Acceptance: a one-column fixture PDF round-trips at or above a stated token-recall threshold. Two-column and image-text fixtures exit 1 with the rule name. A PDF with no extractable text exits 1.
+- **M3: `pdf-check`.** Acceptance: a one-column fixture PDF round-trips at or above a stated token-recall threshold. Two-column and image-text fixtures exit 1 with the rule name. A column drawn out of order and a name image that overall recall would miss exit 1 too. A PDF with no extractable text exits 1.
 - **M4: packaging and release.** Plugin with `/tailor` and `/verify`, README with the number and a GIF, `oss-review` with no FAIL, v0.1.0. Acceptance: a fresh clone in a temp folder follows the Quickstart word for word.
 
 ## Distribution

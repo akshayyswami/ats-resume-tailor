@@ -13,9 +13,17 @@ import typer
 
 from ats_resume_tailor import __version__
 from ats_resume_tailor.adapters.files import load_evidence, load_gaps, read_text
+from ats_resume_tailor.adapters.pdf import read_pdf
 from ats_resume_tailor.core.export import strip_ids
 from ats_resume_tailor.core.gaps import GapTable
 from ats_resume_tailor.core.models import EvidenceError
+from ats_resume_tailor.core.pdfcheck import (
+    MIN_HEADER_RECALL,
+    MIN_PAIR_RECALL,
+    MIN_TOKEN_RECALL,
+    PdfReport,
+    check_pdf,
+)
 from ats_resume_tailor.core.template import EVIDENCE_TEMPLATE
 from ats_resume_tailor.core.verify import Finding, Report, check_evidence, verify
 
@@ -32,6 +40,10 @@ GapsOption = Annotated[
     typer.Option("--gaps", "-g", help="Path to the gap file for this job description."),
 ]
 JsonOption = Annotated[bool, typer.Option("--json", help="Print machine-readable JSON.")]
+SourceOption = Annotated[
+    Path,
+    typer.Option("--source", "-s", help="The exported clean resume the PDF was made from."),
+]
 
 
 def _as_dict(finding: Finding) -> dict[str, object]:
@@ -154,3 +166,56 @@ def export_command(
         raise typer.Exit(2)
     target.write_text(strip_ids(text), encoding="utf-8")
     typer.echo(f"{_summary(report)}\nexport: wrote {target}")
+
+
+def _pdf_dict(report: PdfReport) -> dict[str, object]:
+    return {
+        "ok": report.ok,
+        "pages": report.pages,
+        "images": report.images,
+        "source_words": report.source_words,
+        "thresholds": {
+            "token_recall": MIN_TOKEN_RECALL,
+            "header_recall": MIN_HEADER_RECALL,
+            "pair_recall": MIN_PAIR_RECALL,
+        },
+        "recalls": [
+            {
+                "order": r.order,
+                "words": r.words,
+                "token_recall": r.token,
+                "header_recall": r.header,
+                "pair_recall": r.pair,
+            }
+            for r in report.recalls
+        ],
+        "findings": [_as_dict(f) for f in report.findings],
+    }
+
+
+@app.command("pdf-check")
+def pdf_check_command(pdf: Path, source: SourceOption, json_output: JsonOption = False) -> None:
+    """Check that a resume PDF gives its text back, in order, the way an ATS reads it."""
+    try:
+        report = check_pdf(read_text(source), read_pdf(pdf))
+    except EvidenceError as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(2) from exc
+    if json_output:
+        typer.echo(json.dumps(_pdf_dict(report)))
+    else:
+        for finding in report.findings:
+            _show(str(pdf), finding)
+        for r in report.recalls:
+            typer.echo(
+                f"  {r.order}: {r.words} words read, token recall {r.token:.1%}, "
+                f"header recall {r.header:.1%}, pair recall {r.pair:.1%}"
+            )
+        verdict = "ok" if report.ok else f"FAIL ({len(report.findings)})"
+        typer.echo(
+            f"pdf-check: {verdict}. {report.pages} page(s), {report.images} image(s), "
+            f"{report.source_words} words in the source. Needs token recall "
+            f"{MIN_TOKEN_RECALL:.0%}, header recall {MIN_HEADER_RECALL:.0%} and pair recall "
+            f"{MIN_PAIR_RECALL:.0%}"
+        )
+    raise typer.Exit(0 if report.ok else 1)

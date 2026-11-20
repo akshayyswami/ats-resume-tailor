@@ -158,3 +158,57 @@ def test_export_will_not_overwrite_the_annotated_resume(
     result = runner.invoke(app, ["export", str(copy), "-e", str(persona_path), "-o", str(copy)])
     assert result.exit_code == 2
     assert "[E002]" in copy.read_text(encoding="utf-8")
+
+
+PDFS = Path(__file__).resolve().parents[2] / "evals" / "fixtures" / "pdfs"
+
+
+def test_pdf_check_passes_on_a_single_column_pdf(tmp_path: Path) -> None:
+    clean = Path(__file__).resolve().parents[2] / "examples" / "persona" / "resume.clean.md"
+    result = runner.invoke(app, ["pdf-check", str(PDFS / "one-column.pdf"), "-s", str(clean)])
+    assert result.exit_code == 0
+    assert "pdf-check: ok. 1 page(s), 0 image(s)" in result.stdout
+    assert "visual line order: 200 words read, token recall 100.0%" in result.stdout
+
+
+def test_pdf_check_exits_1_and_names_the_rule_and_the_order() -> None:
+    clean = Path(__file__).resolve().parents[2] / "examples" / "persona" / "resume.clean.md"
+    result = runner.invoke(app, ["pdf-check", str(PDFS / "two-column.pdf"), "--source", str(clean)])
+    assert result.exit_code == 1
+    assert "FAIL reading-order-broken: in visual line order" in result.stdout
+    assert "pdf-check: FAIL (1)" in result.stdout
+
+
+def test_pdf_check_json_output() -> None:
+    clean = Path(__file__).resolve().parents[2] / "examples" / "persona" / "resume.clean.md"
+    args = ["pdf-check", str(PDFS / "image-header.pdf"), "-s", str(clean), "--json"]
+    result = runner.invoke(app, args)
+    payload = json.loads(result.stdout)
+    assert result.exit_code == 1
+    assert payload["ok"] is False
+    assert payload["images"] == 1
+    assert payload["thresholds"] == {
+        "token_recall": 0.95,
+        "header_recall": 1.0,
+        "pair_recall": 0.95,
+    }
+    assert [f["rule"] for f in payload["findings"]] == ["text-in-images"]
+    assert payload["recalls"][0]["header_recall"] == 0.125
+
+
+def test_pdf_check_exits_2_when_an_input_cannot_be_used(tmp_path: Path) -> None:
+    clean = Path(__file__).resolve().parents[2] / "examples" / "persona" / "resume.clean.md"
+    junk = tmp_path / "junk.pdf"
+    junk.write_bytes(b"not a pdf")
+    bad_pdf = runner.invoke(app, ["pdf-check", str(junk), "-s", str(clean)])
+    assert bad_pdf.exit_code == 2
+    assert "cannot read" in bad_pdf.output
+    no_source = runner.invoke(
+        app, ["pdf-check", str(PDFS / "one-column.pdf"), "-s", str(tmp_path / "missing.md")]
+    )
+    assert no_source.exit_code == 2
+    empty = tmp_path / "empty.md"
+    empty.write_text("[E001]\n", encoding="utf-8")
+    no_words = runner.invoke(app, ["pdf-check", str(PDFS / "one-column.pdf"), "-s", str(empty)])
+    assert no_words.exit_code == 2
+    assert "no words" in no_words.output

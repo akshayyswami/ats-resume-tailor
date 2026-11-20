@@ -80,12 +80,174 @@
     }
   },
   "faults": {
-    "must_allow_passed": 8,
-    "must_allow_total": 8,
-    "must_catch_caught": 23,
-    "must_catch_total": 23,
-    "rules_covered": 18,
-    "rules_total": 18
+    "must_allow_passed": 10,
+    "must_allow_total": 10,
+    "must_catch_caught": 30,
+    "must_catch_total": 30,
+    "rules_covered": 22,
+    "rules_total": 22
+  },
+  "pdf": {
+    "fixtures": {
+      "blank": {
+        "images": 0,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 0.0,
+          "pair": 0.0,
+          "token": 0.0,
+          "words": 0
+        },
+        "visual": {
+          "header": 0.0,
+          "pair": 0.0,
+          "token": 0.0,
+          "words": 0
+        }
+      },
+      "half-resume": {
+        "images": 0,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 0.3719,
+          "token": 0.375,
+          "words": 75
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 0.3719,
+          "token": 0.375,
+          "words": 75
+        }
+      },
+      "image-header": {
+        "images": 1,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 0.125,
+          "pair": 0.9598,
+          "token": 0.96,
+          "words": 192
+        },
+        "visual": {
+          "header": 0.125,
+          "pair": 0.9598,
+          "token": 0.96,
+          "words": 192
+        }
+      },
+      "image-only": {
+        "images": 1,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 0.0,
+          "pair": 0.0,
+          "token": 0.0,
+          "words": 0
+        },
+        "visual": {
+          "header": 0.0,
+          "pair": 0.0,
+          "token": 0.0,
+          "words": 0
+        }
+      },
+      "image-section": {
+        "images": 1,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 0.7789,
+          "token": 0.78,
+          "words": 156
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 0.7789,
+          "token": 0.78,
+          "words": 156
+        }
+      },
+      "one-column": {
+        "images": 0,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        }
+      },
+      "one-column-with-logo": {
+        "images": 1,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        }
+      },
+      "stream-scrambled": {
+        "images": 0,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 0.8995,
+          "token": 1.0,
+          "words": 200
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        }
+      },
+      "two-column": {
+        "images": 0,
+        "pages": 1,
+        "source_words": 200,
+        "stream": {
+          "header": 1.0,
+          "pair": 1.0,
+          "token": 1.0,
+          "words": 200
+        },
+        "visual": {
+          "header": 1.0,
+          "pair": 0.8643,
+          "token": 1.0,
+          "words": 200
+        }
+      }
+    },
+    "thresholds": {
+      "header": 1.0,
+      "pair": 0.95,
+      "token": 0.95
+    }
   },
   "persona": {
     "facts": 12

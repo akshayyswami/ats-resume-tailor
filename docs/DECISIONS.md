@@ -2,6 +2,25 @@
 
 One entry per decision that changes architecture or scope. Newest first.
 
+## 2026-11-20: the header words must all come back
+
+- **Decision:** `pdf-check` also measures header recall, the share of the words before the first `## ` heading that come back, and fails below 100%. A shortfall there fires `text-in-images` if the file has images, or `low-token-recall` if not.
+- **Why:** the approved plan used token and pair recall only, on the strength of a prototype in which an image header scored 0.89. That prototype truncated long lines, so the figure was wrong. The real `image-header` fixture keeps 96.0% of the words as text, which passes a 95% threshold, while losing 7 of the 8 name and contact words. The share is also length-dependent: the same header is 1.3% of a 600-word resume. An ATS needs the name and contact words to identify the applicant, so they are checked on their own.
+- **Consequences:** a second image fixture, `image-section`, covers the overall recall path. The plan said four rules and they are still four. Only the condition of two of them grew.
+- **Alternatives:** raise the token threshold to 98%. Rejected: it catches this fixture only because the resume is short. Fail whenever the file has any image and any word is missing. Rejected: it ties the result to a count that noise can move.
+
+## 2026-11-20: `pdf-check` reads each PDF in two orders, with pypdf
+
+- **Decision:** `pdf-check` extracts text with pypdf in its drawing-order mode and its visual-line mode, and fails if either order scrambles the resume. pypdf is a runtime dependency. The command needs `--source`, the exported clean resume.
+- **Why:** a prototype on the persona resume showed `two-column` at 100% in drawing order and 86.4% word-pair recall by visual line, because the left column is drawn before the right. A bottom-to-top PDF is the reverse. One order passes one of them. A round trip needs a reference, so the source is required. pypdf is BSD-3 and pure Python, and its default order is the naive reading an ATS may do.
+- **Alternatives:** pdfminer.six. Rejected: its layout analysis reorders columns, which hides the fault under test. pymupdf. Rejected: AGPL. poppler's `pdftotext`. Rejected: not a Python dependency. A check with no source, on heuristics alone. Rejected: nothing to measure recall against.
+
+## 2026-11-20: PDF fixtures are generated with reportlab and committed
+
+- **Decision:** `evals/make_pdf_fixtures.py` renders the persona's clean resume into nine PDFs in `evals/fixtures/pdfs/`. reportlab is a development dependency. The PDFs are committed, and no test compares their bytes.
+- **Why:** a test of the checker needs files that fail in known ways, and a drawing library is the only practical way to make a column drawn bottom to top or a picture of text. Committing the output keeps CI independent of reportlab's output, so an upgrade cannot cause noise.
+- **Alternatives:** a hand-written PDF writer. Rejected: it adds code to maintain for no gain in what is tested.
+
 ## 2026-11-20: a term the cited fact says is supported, tag or not
 
 - **Decision:** in `term-not-in-cited-evidence`, a term is supported when it is a skill tag of a cited fact or appears, as a whole word, in the text of a cited fact. `not-claimable-term` and `adjacent-term-overclaim` are checked first and are unchanged.

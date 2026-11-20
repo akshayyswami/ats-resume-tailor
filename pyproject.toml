@@ -8,6 +8,7 @@ authors = [{ name = "Akshay Swaminathan" }]
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2",
+    "pypdf>=5",
     "pyyaml>=6",
     "typer>=0.12",
 ]
@@ -27,6 +28,7 @@ dev = [
     "pytest-cov",
     "pre-commit",
     "types-pyyaml>=6.0.12.20261113",
+    "reportlab>=5.1.0",
 ]
 
 [build-system]
@@ -57,6 +59,10 @@ strict = true
 python_version = "3.12"
 files = ["src", "tests", "evals"]
 mypy_path = "evals"
+
+[[tool.mypy.overrides]]
+module = ["reportlab.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
