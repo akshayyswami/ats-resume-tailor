@@ -1,0 +1,1271 @@
+{
+  "claude_code_version": "2.1.273",
+  "date": "2026-11-20",
+  "model": "claude-sonnet-5-5",
+  "prompts": {
+    "evidence-only-pushed": "3da0cdadaff217d2",
+    "gated-pushed": "e4969f4cb6037d1e",
+    "plain": "37d62e3c533287e4",
+    "plain-pushed": "61d751924c4dec82"
+  },
+  "runs": [
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0783907,
+      "duration_ms": 18138,
+      "error": "",
+      "jd": "jd-01",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0723347,
+      "duration_ms": 17793,
+      "error": "",
+      "jd": "jd-02",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0829419,
+      "duration_ms": 22430,
+      "error": "",
+      "jd": "jd-03",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0822002,
+      "duration_ms": 22498,
+      "error": "",
+      "jd": "jd-04",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07738809999999999,
+      "duration_ms": 21349,
+      "error": "",
+      "jd": "jd-05",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07594329999999999,
+      "duration_ms": 19500,
+      "error": "",
+      "jd": "jd-06",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.077756,
+      "duration_ms": 20356,
+      "error": "",
+      "jd": "jd-07",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07536780000000001,
+      "duration_ms": 18154,
+      "error": "",
+      "jd": "jd-08",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.078371,
+      "duration_ms": 21612,
+      "error": "",
+      "jd": "jd-09",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0778513,
+      "duration_ms": 17501,
+      "error": "",
+      "jd": "jd-10",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0751601,
+      "duration_ms": 19401,
+      "error": "",
+      "jd": "jd-11",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.08158580000000001,
+      "duration_ms": 21984,
+      "error": "",
+      "jd": "jd-12",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0798356,
+      "duration_ms": 21185,
+      "error": "",
+      "jd": "jd-13",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.080621,
+      "duration_ms": 21348,
+      "error": "",
+      "jd": "jd-14",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.08202369999999999,
+      "duration_ms": 22349,
+      "error": "",
+      "jd": "jd-15",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0720153,
+      "duration_ms": 17743,
+      "error": "",
+      "jd": "jd-16",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07938210000000001,
+      "duration_ms": 20991,
+      "error": "",
+      "jd": "jd-17",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07467939999999999,
+      "duration_ms": 19326,
+      "error": "",
+      "jd": "jd-18",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0782013,
+      "duration_ms": 19897,
+      "error": "",
+      "jd": "jd-19",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0828758,
+      "duration_ms": 23300,
+      "error": "",
+      "jd": "jd-20",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0741005,
+      "duration_ms": 18984,
+      "error": "",
+      "jd": "jd-21",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0847774,
+      "duration_ms": 24015,
+      "error": "",
+      "jd": "jd-22",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.07702859999999999,
+      "duration_ms": 19876,
+      "error": "",
+      "jd": "jd-23",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "evidence-only-pushed",
+      "cost_usd": 0.0789789,
+      "duration_ms": 20985,
+      "error": "",
+      "jd": "jd-24",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 5
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.10597000000000001,
+      "duration_ms": 29750,
+      "error": "",
+      "jd": "jd-01",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09649110000000001,
+      "duration_ms": 27017,
+      "error": "",
+      "jd": "jd-02",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09805839999999999,
+      "duration_ms": 27225,
+      "error": "",
+      "jd": "jd-03",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09816159999999999,
+      "duration_ms": 24214,
+      "error": "",
+      "jd": "jd-04",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.0999142,
+      "duration_ms": 27067,
+      "error": "",
+      "jd": "jd-05",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09636520000000001,
+      "duration_ms": 25985,
+      "error": "",
+      "jd": "jd-06",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09877140000000001,
+      "duration_ms": 25531,
+      "error": "",
+      "jd": "jd-07",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 11
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.1006247,
+      "duration_ms": 27171,
+      "error": "",
+      "jd": "jd-08",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.10325390000000001,
+      "duration_ms": 27615,
+      "error": "",
+      "jd": "jd-09",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09187519999999999,
+      "duration_ms": 24387,
+      "error": "",
+      "jd": "jd-10",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.099826,
+      "duration_ms": 25916,
+      "error": "",
+      "jd": "jd-11",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.10513660000000001,
+      "duration_ms": 28843,
+      "error": "",
+      "jd": "jd-12",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09124940000000001,
+      "duration_ms": 25762,
+      "error": "",
+      "jd": "jd-13",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.10359999999999998,
+      "duration_ms": 28585,
+      "error": "",
+      "jd": "jd-14",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09961,
+      "duration_ms": 26649,
+      "error": "",
+      "jd": "jd-15",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.0930639,
+      "duration_ms": 25952,
+      "error": "",
+      "jd": "jd-16",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.0985072,
+      "duration_ms": 26313,
+      "error": "",
+      "jd": "jd-17",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09256099999999999,
+      "duration_ms": 24401,
+      "error": "",
+      "jd": "jd-18",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.0919758,
+      "duration_ms": 24085,
+      "error": "",
+      "jd": "jd-19",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.1014029,
+      "duration_ms": 26954,
+      "error": "",
+      "jd": "jd-20",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.1025173,
+      "duration_ms": 27340,
+      "error": "",
+      "jd": "jd-21",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09226050000000001,
+      "duration_ms": 25642,
+      "error": "",
+      "jd": "jd-22",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.09638000000000002,
+      "duration_ms": 25866,
+      "error": "",
+      "jd": "jd-23",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 10
+    },
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 0.0882704,
+      "duration_ms": 22291,
+      "error": "",
+      "jd": "jd-24",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 9
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0316359,
+      "duration_ms": 5609,
+      "error": "",
+      "jd": "jd-01",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0316899,
+      "duration_ms": 5227,
+      "error": "",
+      "jd": "jd-02",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.031615899999999995,
+      "duration_ms": 5609,
+      "error": "",
+      "jd": "jd-03",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314059,
+      "duration_ms": 5040,
+      "error": "",
+      "jd": "jd-04",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0334299,
+      "duration_ms": 6164,
+      "error": "",
+      "jd": "jd-05",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0318119,
+      "duration_ms": 4815,
+      "error": "",
+      "jd": "jd-06",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0315339,
+      "duration_ms": 4963,
+      "error": "",
+      "jd": "jd-07",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314599,
+      "duration_ms": 5328,
+      "error": "",
+      "jd": "jd-08",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0315619,
+      "duration_ms": 5127,
+      "error": "",
+      "jd": "jd-09",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314699,
+      "duration_ms": 5066,
+      "error": "",
+      "jd": "jd-10",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0315719,
+      "duration_ms": 5502,
+      "error": "",
+      "jd": "jd-11",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0313439,
+      "duration_ms": 5048,
+      "error": "",
+      "jd": "jd-12",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0311339,
+      "duration_ms": 4611,
+      "error": "",
+      "jd": "jd-13",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0316119,
+      "duration_ms": 5183,
+      "error": "",
+      "jd": "jd-14",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0315859,
+      "duration_ms": 5323,
+      "error": "",
+      "jd": "jd-15",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314719,
+      "duration_ms": 4970,
+      "error": "",
+      "jd": "jd-16",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0315219,
+      "duration_ms": 5220,
+      "error": "",
+      "jd": "jd-17",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0316979,
+      "duration_ms": 5211,
+      "error": "",
+      "jd": "jd-18",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.031567899999999996,
+      "duration_ms": 4728,
+      "error": "",
+      "jd": "jd-19",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314279,
+      "duration_ms": 5228,
+      "error": "",
+      "jd": "jd-20",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.031617900000000004,
+      "duration_ms": 4849,
+      "error": "",
+      "jd": "jd-21",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0314039,
+      "duration_ms": 4977,
+      "error": "",
+      "jd": "jd-22",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0316279,
+      "duration_ms": 4814,
+      "error": "",
+      "jd": "jd-23",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain",
+      "cost_usd": 0.0355139,
+      "duration_ms": 8306,
+      "error": "",
+      "jd": "jd-24",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0394139,
+      "duration_ms": 11403,
+      "error": "",
+      "jd": "jd-01",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0401319,
+      "duration_ms": 11631,
+      "error": "",
+      "jd": "jd-02",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0374559,
+      "duration_ms": 9962,
+      "error": "",
+      "jd": "jd-03",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0404799,
+      "duration_ms": 12647,
+      "error": "",
+      "jd": "jd-04",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.039865899999999996,
+      "duration_ms": 11409,
+      "error": "",
+      "jd": "jd-05",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.042717899999999996,
+      "duration_ms": 13995,
+      "error": "",
+      "jd": "jd-06",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0408239,
+      "duration_ms": 11805,
+      "error": "",
+      "jd": "jd-07",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.037855900000000005,
+      "duration_ms": 10395,
+      "error": "",
+      "jd": "jd-08",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.039653900000000006,
+      "duration_ms": 11690,
+      "error": "",
+      "jd": "jd-09",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0392419,
+      "duration_ms": 10753,
+      "error": "",
+      "jd": "jd-10",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0397119,
+      "duration_ms": 11070,
+      "error": "",
+      "jd": "jd-11",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.040817900000000004,
+      "duration_ms": 12550,
+      "error": "",
+      "jd": "jd-12",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.039637900000000004,
+      "duration_ms": 11689,
+      "error": "",
+      "jd": "jd-13",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0385479,
+      "duration_ms": 11314,
+      "error": "",
+      "jd": "jd-14",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0396219,
+      "duration_ms": 11191,
+      "error": "",
+      "jd": "jd-15",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.038583900000000004,
+      "duration_ms": 10631,
+      "error": "",
+      "jd": "jd-16",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0398039,
+      "duration_ms": 11870,
+      "error": "",
+      "jd": "jd-17",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0400559,
+      "duration_ms": 11390,
+      "error": "",
+      "jd": "jd-18",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0410319,
+      "duration_ms": 12110,
+      "error": "",
+      "jd": "jd-19",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.040975899999999996,
+      "duration_ms": 11847,
+      "error": "",
+      "jd": "jd-20",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.042445899999999995,
+      "duration_ms": 12875,
+      "error": "",
+      "jd": "jd-21",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.042751899999999995,
+      "duration_ms": 14124,
+      "error": "",
+      "jd": "jd-22",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0403519,
+      "duration_ms": 11778,
+      "error": "",
+      "jd": "jd-23",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    },
+    {
+      "arm": "plain-pushed",
+      "cost_usd": 0.0398439,
+      "duration_ms": 11557,
+      "error": "",
+      "jd": "jd-24",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "produced": true,
+      "run": 1,
+      "turns": 1
+    }
+  ],
+  "runs_per_jd": 1,
+  "superseded": [
+    {
+      "arm": "gated-pushed",
+      "cost_usd": 2.45,
+      "reason": "ran against a verify that rejected wording copied from the evidence; re-run after the fix",
+      "runs": 24
+    }
+  ],
+  "total_cost_usd": 5.9502
+}

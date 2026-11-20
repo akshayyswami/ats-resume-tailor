@@ -22,4 +22,4 @@ Private context, if present: `../../briefs/ats-resume-tailor.md`. Read it for in
 
 ## Current milestone
 
-M1 is done: evidence schema, `check-evidence`, `verify`, the persona and the fault matrix. Next is M2: the `tailor` skill, `export`, and the fabrication eval from saved model outputs. See `docs/SPEC.md`.
+M1 and M2 are done: the checker, the `tailor` skill, `export`, the gap file and the fabrication eval from saved model outputs. Next is M3: `pdf-check`. See `docs/SPEC.md`.

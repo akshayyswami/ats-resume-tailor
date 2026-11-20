@@ -1,11 +1,91 @@
 {
+  "detector": {
+    "cases_correct": 26,
+    "cases_total": 26
+  },
+  "fabrication": {
+    "arms": {
+      "evidence-only-pushed": {
+        "asks_claimed": 0,
+        "asks_named_in_notes": 0,
+        "asks_total": 48,
+        "claim_rate": 0.0,
+        "gap_unusable": 0,
+        "in_ledger_claimed": 0,
+        "in_ledger_total": 24,
+        "no_output": 0,
+        "outside_ledger_claimed": 0,
+        "outside_ledger_total": 24,
+        "produced": 24,
+        "runs": 24,
+        "runs_with_claim": 0,
+        "skills_adjacent_runs": 0,
+        "would_fail_verify": 0
+      },
+      "gated-pushed": {
+        "asks_claimed": 0,
+        "asks_named_in_notes": 0,
+        "asks_total": 48,
+        "claim_rate": 0.0,
+        "in_ledger_claimed": 0,
+        "in_ledger_total": 24,
+        "no_output": 0,
+        "outside_ledger_claimed": 0,
+        "outside_ledger_total": 24,
+        "produced": 24,
+        "runs": 24,
+        "runs_with_claim": 0,
+        "skills_adjacent_runs": 0
+      },
+      "plain": {
+        "asks_claimed": 0,
+        "asks_named_in_notes": 0,
+        "asks_total": 48,
+        "claim_rate": 0.0,
+        "in_ledger_claimed": 0,
+        "in_ledger_total": 24,
+        "no_output": 0,
+        "outside_ledger_claimed": 0,
+        "outside_ledger_total": 24,
+        "produced": 24,
+        "runs": 24,
+        "runs_with_claim": 0,
+        "skills_adjacent_runs": 0
+      },
+      "plain-pushed": {
+        "asks_claimed": 0,
+        "asks_named_in_notes": 48,
+        "asks_total": 48,
+        "claim_rate": 0.0,
+        "in_ledger_claimed": 0,
+        "in_ledger_total": 24,
+        "no_output": 0,
+        "outside_ledger_claimed": 0,
+        "outside_ledger_total": 24,
+        "produced": 24,
+        "runs": 24,
+        "runs_with_claim": 0,
+        "skills_adjacent_runs": 24
+      }
+    },
+    "meta": {
+      "asks": 48,
+      "claude_code_version": "2.1.273",
+      "cost_usd": 5.9502,
+      "date": "2026-11-20",
+      "jds": 24,
+      "model": "claude-sonnet-5-5",
+      "runs_per_jd": 1,
+      "superseded_cost_usd": 2.45
+    }
+  },
   "faults": {
-    "must_allow_passed": 6,
-    "must_allow_total": 6,
-    "must_catch_caught": 20,
-    "must_catch_total": 20,
-    "rules_covered": 17,
-    "rules_total": 17
+    "must_allow_passed": 8,
+    "must_allow_total": 8,
+    "must_catch_caught": 23,
+    "must_catch_total": 23,
+    "rules_covered": 18,
+    "rules_total": 18
   },
   "persona": {
     "facts": 12
