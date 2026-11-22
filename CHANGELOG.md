@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+
+- A README section on using the plugin in Claude Code: first-time setup, and what to type for each job.
+
 ### Changed
 
 - The release workflow checks that the tag matches the `pyproject.toml` and `plugin.json` versions and is on `main`, and every GitHub Action is pinned by commit SHA.

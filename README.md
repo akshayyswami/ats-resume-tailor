@@ -88,6 +88,42 @@ The Claude Code plugin, which adds the skill and three commands, `/ats-resume-ta
 
 It is also on PyPI, so `uvx ats-resume-tailor` and `uv tool install ats-resume-tailor` work too.
 
+## Use it in Claude Code
+
+**Once**
+
+1. Install [uv](https://docs.astral.sh/uv/) and the plugin, as above.
+2. Make a folder for your resume work and run `uvx ats-resume-tailor init` in it. That writes `evidence.yaml`. (You can skip this step: the first `/ats-resume-tailor:tailor` in a folder without one creates it and stops.)
+3. Replace the example fact with your own. A fact is one thing you did, with a source (what would prove it), the date you checked it, and the skill tags it supports. Then fill in the ledger (what you may claim, what is only adjacent, what you must never claim), your banned words and any claims you got wrong before.
+4. Run `uvx ats-resume-tailor check-evidence evidence.yaml`. It should print `check-evidence: ok`. It prints the same on the untouched template, so make sure no `EXAMPLE, replace me` text is left.
+
+**For each job**
+
+Open Claude Code in that folder and type:
+
+```text
+/ats-resume-tailor:tailor path/to/job-description.md
+```
+
+You can paste the job description after the command instead of a path. Claude then:
+
+1. checks `evidence.yaml`,
+2. writes `gap.md`, one row per requirement marked HAVE, PARTIAL or MISSING, and `resume.md`, with the evidence IDs behind each line,
+3. runs `verify` and fixes what it flags, up to 3 rounds,
+4. runs `export`, which writes `resume.clean.md` without the IDs, and shows you that resume, the gap table and anything marked NOT CHECKED.
+
+If `verify` still fails after 3 rounds, Claude stops and shows the failures instead of a resume. A requirement your evidence cannot meet is left out, so the resume can come out shorter than the job asks for.
+
+Then make the PDF from `resume.clean.md` in your own word processor, because the tool does not render PDFs, and check it:
+
+```text
+/ats-resume-tailor:pdf-check resume.pdf
+```
+
+That compares the PDF with `resume.clean.md` in the same folder. If you edit `resume.md` by hand, `/ats-resume-tailor:verify resume.md evidence.yaml gap.md` checks it again.
+
+Two things to know. The files have fixed names, so the next job overwrites `gap.md`, `resume.md` and `resume.clean.md`: move or rename them first. And asking in plain words ("tailor my resume to this job description") usually starts the same skill, but the command is the sure way, because the skill's description was tested on a small set of requests (see Limits).
+
 ## How it works
 
 ```mermaid
