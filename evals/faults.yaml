@@ -229,6 +229,17 @@ must_catch:
     input: fixtures/banks/adjacent-incomplete.yaml
     expect_rule: adjacent-incomplete
     reason: an adjacent term with no sanctioned wording and no supporting facts
+  - id: template-untouched
+    kind: bank
+    input: fixtures/banks/template-untouched.yaml
+    expect_rule: placeholder-fact
+    reason: the bank exactly as `init` writes it, with its example fact still in place
+  - id: placeholder-fact-cited
+    kind: resume
+    bank: fixtures/banks/template-untouched.yaml
+    input: fixtures/resumes/placeholder-fact-cited.txt
+    expect_rule: placeholder-fact
+    reason: a resume that cites the template's example fact, which nobody verified
 
 must_allow:
   - id: clean-persona-resume
@@ -239,6 +250,10 @@ must_allow:
     kind: bank
     input: ../examples/persona/evidence.yaml
     reason: the sample bank passes its own checks
+  - id: example-in-ordinary-text
+    kind: bank
+    input: fixtures/banks/example-in-ordinary-text.yaml
+    reason: the word "example" and a source that says "where I can prove it" are ordinary text, not the template's placeholder
   - id: weakly-checked-bullet
     kind: resume
     input: fixtures/resumes/ok-weakly-checked.txt

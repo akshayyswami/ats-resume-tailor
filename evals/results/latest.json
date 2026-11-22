@@ -80,12 +80,12 @@
     }
   },
   "faults": {
-    "must_allow_passed": 11,
-    "must_allow_total": 11,
-    "must_catch_caught": 38,
-    "must_catch_total": 38,
-    "rules_covered": 25,
-    "rules_total": 25
+    "must_allow_passed": 12,
+    "must_allow_total": 12,
+    "must_catch_caught": 40,
+    "must_catch_total": 40,
+    "rules_covered": 26,
+    "rules_total": 26
   },
   "pdf": {
     "fixtures": {

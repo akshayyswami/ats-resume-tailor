@@ -17,6 +17,7 @@ from ats_resume_tailor.core.gaps import GapTable
 from ats_resume_tailor.core.models import Evidence, Fact
 from ats_resume_tailor.core.numbers import NumberMention, canonical_values, extract, quantity_words
 from ats_resume_tailor.core.resume import Line, parse
+from ats_resume_tailor.core.template import PLACEHOLDER_SOURCE, PLACEHOLDER_TEXT
 from ats_resume_tailor.core.terms import Lexicon, build_lexicon, normalise, word_pattern
 
 Status = Literal["FAIL", "NOT_CHECKED"]
@@ -46,6 +47,7 @@ BANK_RULES: Final = (
     "metric-without-number",
     "claimable-without-evidence",
     "adjacent-incomplete",
+    "placeholder-fact",
 )
 ALL_RULES: Final = RESUME_RULES + BANK_RULES
 
@@ -279,6 +281,14 @@ def _claim_findings(
             )
         else:
             cited.append(fact)
+            if _is_placeholder(fact):
+                found.append(
+                    Finding(
+                        "placeholder-fact",
+                        line.number,
+                        f"{fact_id} is the template's example fact, not one you verified",
+                    )
+                )
     if not cited:
         return found
     supported: set[str] = set()
@@ -427,6 +437,13 @@ def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Repor
     return Report(tuple(findings), claim_lines, skill_items, unchecked_headings)
 
 
+def _is_placeholder(fact: Fact) -> bool:
+    """True while a fact still carries the text or the source that `init` wrote."""
+    if PLACEHOLDER_TEXT.lower() in fact.text.lower():
+        return True
+    return fact.verified is not None and PLACEHOLDER_SOURCE.lower() in fact.verified.source.lower()
+
+
 def check_evidence(evidence: Evidence) -> list[Finding]:
     """Check the bank itself. Findings carry line 0."""
     found: list[Finding] = []
@@ -436,6 +453,15 @@ def check_evidence(evidence: Evidence) -> list[Finding]:
     ids = {fact.id for fact in evidence.facts}
     verified_tags: set[str] = set()
     for fact in evidence.facts:
+        if _is_placeholder(fact):
+            found.append(
+                Finding(
+                    "placeholder-fact",
+                    0,
+                    f"{fact.id} is still the template's example: replace its text, source and "
+                    "date with a fact you can back up",
+                )
+            )
         if fact.verified is None or not fact.verified.source.strip():
             found.append(
                 Finding("missing-verified", 0, f"{fact.id} has no verification source and date")

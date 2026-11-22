@@ -1,6 +1,17 @@
-"""The starter evidence bank that `init` writes. It passes `check-evidence` as written."""
+"""The starter evidence bank that `init` writes. It fails `check-evidence` as written, on purpose.
+
+Its one fact is a placeholder. A bank that passed untouched would let a resume cite a fact that
+nobody verified, so the checks refuse the template's text and source until they are replaced.
+"""
 
 from __future__ import annotations
+
+from typing import Final
+
+# Both strings appear in EVIDENCE_TEMPLATE, and the checks look for them.
+# A test keeps the two in step.
+PLACEHOLDER_TEXT: Final = "EXAMPLE, replace me"
+PLACEHOLDER_SOURCE: Final = "where you can prove it"
 
 EVIDENCE_TEMPLATE = """\
 # Your evidence bank. ats-resume-tailor trusts what is in this file, so put only things you can

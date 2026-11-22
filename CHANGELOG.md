@@ -6,7 +6,13 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Added
 
-- A README section on using the plugin in Claude Code: first-time setup, and what to type for each job.
+- README sections for adding the tool to Claude Code, Codex, Cursor and other agents, for using it in Claude Code (first-time setup, and what to type for each job), Troubleshooting and Privacy. Only Claude Code was run. The other agents follow their own documentation as read on 2026-11-22.
+- A new rule, `placeholder-fact`, in `check-evidence` and `verify`: the template's example fact is refused until its text and source are replaced. The fault matrix is 40 must-catch and 12 must-allow, across 26 rules.
+- A pull request template, and Dependabot for GitHub Actions and uv.
+
+### Fixed
+
+- The evidence template that `init` writes passed `check-evidence` untouched, so a resume could cite its example fact ("EXAMPLE, replace me") and pass `verify`. Both now fail with `placeholder-fact` until the example is replaced.
 
 ### Changed
 

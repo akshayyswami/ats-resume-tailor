@@ -112,7 +112,10 @@ def init(path: Annotated[Path, typer.Argument()] = Path("evidence.yaml")) -> Non
     except OSError as exc:
         typer.echo(f"error: cannot write {path}: {exc.strerror or exc}", err=True)
         raise typer.Exit(2) from exc
-    typer.echo(f"wrote {path}. Replace the example fact, then run: check-evidence {path}")
+    typer.echo(
+        f"wrote {path}. Replace the example fact, then run: check-evidence {path}. "
+        "It fails until you do."
+    )
 
 
 @app.command("check-evidence")

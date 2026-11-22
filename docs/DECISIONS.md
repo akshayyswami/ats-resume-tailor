@@ -134,3 +134,11 @@ One entry per decision that changes architecture or scope. Newest first.
 - **Decision:** `pdf-check` checks any PDF you supply. There is no renderer or template in this repo.
 - **Why:** a template adds a rendering dependency and a design job, and it is the part furthest from the thesis.
 - **Alternatives:** ship a one-column template. Deferred.
+
+## 2026-11-22: The starter evidence file fails its own check until it is edited
+
+- **Decision:** `init` still writes an example fact, but `check-evidence` and `verify` now refuse it. The rule `placeholder-fact` fires on a fact whose text contains "EXAMPLE, replace me" or whose source contains "where you can prove it", the two strings `init` writes. `verify` fires it on the line that cites the fact, so a resume built on the untouched template cannot pass.
+- **Why:** running `init` in an empty folder and then `check-evidence` printed `ok`, and a resume citing the example fact passed `verify`. The tool's promise is that every line traces to evidence you verified, and the template's one fact was not. Fail closed.
+- **Both strings must go.** Replacing only the text leaves a placeholder source, and the reverse. A test covers each half, and another keeps the two constants in step with the template.
+- **Alternatives:** leave the placeholder and rely on the user to read the comment (rejected: that is the failure); make `init` write no fact at all (rejected: an empty bank gives the user no model of a fact, and `check-evidence` would pass an empty file); report NOT CHECKED instead of FAIL (rejected: a placeholder is known to be wrong, not merely unverifiable).
+- **Known gap:** the check matches the two strings. A user who copies the template and keeps its wording in a real fact is caught, and one who rewrites both strings is not. Whether the fact is true was never checkable.

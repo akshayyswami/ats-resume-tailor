@@ -127,7 +127,7 @@ def test_duplicate_ids_stop_verify(persona: Evidence) -> None:
 
 
 def test_rule_names_are_unique() -> None:
-    assert len(ALL_RULES) == len(set(ALL_RULES)) == 21
+    assert len(ALL_RULES) == len(set(ALL_RULES)) == 22
 
 
 def test_check_evidence_is_clean_on_the_persona(persona: Evidence) -> None:

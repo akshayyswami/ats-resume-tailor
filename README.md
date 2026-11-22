@@ -13,7 +13,7 @@ A CLI and agent skill for tailoring an ATS-friendly resume to a job description 
 
 Two figures, kept apart because one is code and one involves a model.
 
-**The checker.** <!-- eval:faults.must_catch_caught -->38<!-- /eval --> of <!-- eval:faults.must_catch_total -->38<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->11<!-- /eval --> of <!-- eval:faults.must_allow_total -->11<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->25<!-- /eval --> of <!-- eval:faults.rules_total -->25<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, a claim hidden in the header block, an invisible character inside a skill name, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
+**The checker.** <!-- eval:faults.must_catch_caught -->40<!-- /eval --> of <!-- eval:faults.must_catch_total -->40<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->12<!-- /eval --> of <!-- eval:faults.must_allow_total -->12<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->26<!-- /eval --> of <!-- eval:faults.rules_total -->26<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, a claim hidden in the header block, an invisible character inside a skill name, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
 
 **A model asked to tailor a resume.** <!-- eval:fabrication.meta.jds -->24<!-- /eval --> invented job descriptions each ask for two skills the persona does not have, <!-- eval:fabrication.meta.asks -->48<!-- /eval --> asks in all. `<!-- eval:fabrication.meta.model -->claude-sonnet-5-5<!-- /eval -->` tailored the persona's resume to each one, once per job description, in four ways:
 
@@ -88,6 +88,23 @@ The Claude Code plugin, which adds the skill and three commands, `/ats-resume-ta
 
 It is also on PyPI, so `uvx ats-resume-tailor` and `uv tool install ats-resume-tailor` work too.
 
+## Add it to your agent
+
+The tool is two things: the `ats-resume-tailor` command, which checks, and a skill, a markdown file of steps that tells an agent how to draft and when to call the command. Only Claude Code was run by me. The other notes follow each agent's own documentation as I read it on 2026-11-22, so check the page if an agent has changed.
+
+**Claude Code.** The plugin from the Install section above adds the skill and the three commands, and runs the bundled command with `uv`:
+
+```text
+/plugin marketplace add akshayyswami/ats-resume-tailor
+/plugin install ats-resume-tailor@ats-resume-tailor
+```
+
+**Codex.** Codex reads skills from folders that hold a `SKILL.md`: `.agents/skills/` in a project or `~/.agents/skills/` for every project ([docs](https://developers.openai.com/codex/skills)). Copy the `skills/ats-resume-tailor/` folder from this repo into one of them. The skill runs `ats-resume-tailor`, or `uvx ats-resume-tailor` when it is not installed, so Codex needs `uv` and permission to run it. I took the folder names from a summary of the docs and did not run this.
+
+**Cursor.** The Cursor docs I could reach describe rules (`.cursor/rules/*.mdc`) and no skill folders ([docs](https://cursor.com/docs/context/rules)). Put the contents of `skills/ats-resume-tailor/SKILL.md` in a rule, or attach the file to the chat, and have `uv` available. I did not run this.
+
+**Any other agent.** The command works on its own: `uvx ats-resume-tailor verify ...`. The skill is plain markdown, so an agent that can read a file and run a command can follow it.
+
 ## Use it in Claude Code
 
 **Once**
@@ -95,7 +112,7 @@ It is also on PyPI, so `uvx ats-resume-tailor` and `uv tool install ats-resume-t
 1. Install [uv](https://docs.astral.sh/uv/) and the plugin, as above.
 2. Make a folder for your resume work and run `uvx ats-resume-tailor init` in it. That writes `evidence.yaml`. (You can skip this step: the first `/ats-resume-tailor:tailor` in a folder without one creates it and stops.)
 3. Replace the example fact with your own. A fact is one thing you did, with a source (what would prove it), the date you checked it, and the skill tags it supports. Then fill in the ledger (what you may claim, what is only adjacent, what you must never claim), your banned words and any claims you got wrong before.
-4. Run `uvx ats-resume-tailor check-evidence evidence.yaml`. It should print `check-evidence: ok`. It prints the same on the untouched template, so make sure no `EXAMPLE, replace me` text is left.
+4. Run `uvx ats-resume-tailor check-evidence evidence.yaml`. It should print `check-evidence: ok`. It fails with `placeholder-fact` until the example fact's text and source are replaced.
 
 **For each job**
 
@@ -123,6 +140,21 @@ Then make the PDF from `resume.clean.md` in your own word processor, because the
 That compares the PDF with `resume.clean.md` in the same folder. If you edit `resume.md` by hand, `/ats-resume-tailor:verify resume.md evidence.yaml gap.md` checks it again.
 
 Two things to know. The files have fixed names, so the next job overwrites `gap.md`, `resume.md` and `resume.clean.md`: move or rename them first. And asking in plain words ("tailor my resume to this job description") usually starts the same skill, but the command is the sure way, because the skill's description was tested on a small set of requests (see Limits).
+
+**In another agent**, ask in plain words for the same thing the command asks: "Use the ats-resume-tailor skill to tailor my resume to this job description", with the job description pasted or attached, in a folder that holds `evidence.yaml`.
+
+## Troubleshooting
+
+| What you see | Why | Fix |
+|---|---|---|
+| `check-evidence: 1 fail` with `placeholder-fact` right after `init` (version 0.1.0 printed `ok` here) | The example fact `E001` is still in the file, and a resume could cite it | Replace its text, source and date with a fact you can back up |
+| The agent runs `init` and stops | There was no `evidence.yaml` in the folder | Fill the file in, then run the command again |
+| The last job's resume and gap file are gone | The files have fixed names, so each job overwrites them | Move or rename `gap.md`, `resume.md` and `resume.clean.md` before the next job |
+| The agent shows failures and no resume | `verify` still failed after 3 rounds, so it refused to export | Read the named rule and line. Fix the evidence if the fact is wrong, or leave the claim out |
+
+## Privacy
+
+The command runs on your machine and makes no network calls. Your evidence file, the job description and the resume are read by the agent you use, so their text goes to that agent's model provider. `uvx` fetches the package from PyPI the first time it runs. `pdf-check` reads the PDF locally and sends nothing.
 
 ## How it works
 

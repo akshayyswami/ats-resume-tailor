@@ -26,9 +26,9 @@ def _load_measure() -> ModuleType:
 def test_the_fault_matrix_is_perfect() -> None:
     counts, problems = _load_measure().fault_matrix()
     assert problems == []
-    assert counts["must_catch_caught"] == counts["must_catch_total"] == 38
-    assert counts["must_allow_passed"] == counts["must_allow_total"] == 11
-    assert counts["rules_covered"] == counts["rules_total"] == 25
+    assert counts["must_catch_caught"] == counts["must_catch_total"] == 40
+    assert counts["must_allow_passed"] == counts["must_allow_total"] == 12
+    assert counts["rules_covered"] == counts["rules_total"] == 26
 
 
 def test_measure_exits_zero_and_floors_are_checked() -> None:

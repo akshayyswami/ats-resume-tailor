@@ -1,0 +1,6 @@
+persona: fixture
+facts:
+  - {id: E001, kind: project, text: Wrote an example-driven test suite for the shipment API., skills: [python], verified: {source: pull request history, date: 2024-01-01}}
+  - {id: E002, kind: role, text: Backend engineer from 2021 to 2024., verified: {source: the repository where I can prove it, date: 2024-01-01}}
+ledger:
+  - {term: python, status: claimable}

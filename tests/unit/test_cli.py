@@ -7,6 +7,7 @@ from typer.testing import CliRunner
 
 from ats_resume_tailor import __version__
 from ats_resume_tailor.cli import app
+from ats_resume_tailor.core.template import EVIDENCE_TEMPLATE, PLACEHOLDER_SOURCE, PLACEHOLDER_TEXT
 
 runner = CliRunner()
 
@@ -85,10 +86,65 @@ def test_check_evidence_clean_and_failing(persona_path: Path, tmp_path: Path) ->
     ]
 
 
-def test_init_writes_a_bank_that_passes_and_never_overwrites(tmp_path: Path) -> None:
+def test_init_writes_a_bank_that_fails_until_the_example_is_replaced(tmp_path: Path) -> None:
     path = tmp_path / "evidence.yaml"
     assert runner.invoke(app, ["init", str(path)]).exit_code == 0
+    untouched = runner.invoke(app, ["check-evidence", str(path), "--json"])
+    assert untouched.exit_code == 1
+    assert [f["rule"] for f in json.loads(untouched.output)["findings"]] == ["placeholder-fact"]
+
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(PLACEHOLDER_TEXT + ". ", "").replace(
+        "where you can prove it (a review, a repo, a manager who would confirm)",
+        "my own review notes",
+    )
+    path.write_text(text, encoding="utf-8")
     assert runner.invoke(app, ["check-evidence", str(path)]).exit_code == 0
+
+
+def test_replacing_only_the_text_or_only_the_source_still_fails(tmp_path: Path) -> None:
+    path = tmp_path / "evidence.yaml"
+    runner.invoke(app, ["init", str(path)])
+    original = path.read_text(encoding="utf-8")
+    path.write_text(original.replace(PLACEHOLDER_TEXT + ". ", ""), encoding="utf-8")
+    assert runner.invoke(app, ["check-evidence", str(path)]).exit_code == 1  # source left
+    path.write_text(
+        original.replace(
+            "where you can prove it (a review, a repo, a manager who would confirm)",
+            "my own review notes",
+        ),
+        encoding="utf-8",
+    )
+    assert runner.invoke(app, ["check-evidence", str(path)]).exit_code == 1  # text left
+
+
+def test_a_resume_that_cites_the_untouched_template_fails_verify(tmp_path: Path) -> None:
+    bank = tmp_path / "evidence.yaml"
+    runner.invoke(app, ["init", str(bank)])
+    resume = tmp_path / "resume.md"
+    resume.write_text(
+        "# Jo\n\njo@example.com\n\n## Experience\n\n### Dev, Co (2020 to 2024)\n\n"
+        "- Cut the nightly report from 4 hours to 35 minutes. [E001]\n",
+        encoding="utf-8",
+    )
+    result = runner.invoke(app, ["verify", str(resume), "-e", str(bank)])
+    assert result.exit_code == 1
+    assert "placeholder-fact" in result.output
+
+
+def test_the_placeholder_strings_are_the_ones_in_the_template() -> None:
+    assert PLACEHOLDER_TEXT in EVIDENCE_TEMPLATE
+    assert PLACEHOLDER_SOURCE in EVIDENCE_TEMPLATE
+
+
+def test_the_untouched_template_fixture_is_what_init_writes() -> None:
+    fixture = Path(__file__).resolve().parents[2] / "evals/fixtures/banks/template-untouched.yaml"
+    assert fixture.read_text(encoding="utf-8") == EVIDENCE_TEMPLATE
+
+
+def test_init_never_overwrites(tmp_path: Path) -> None:
+    path = tmp_path / "evidence.yaml"
+    assert runner.invoke(app, ["init", str(path)]).exit_code == 0
     path.write_text("mine", encoding="utf-8")
     again = runner.invoke(app, ["init", str(path)])
     assert again.exit_code == 1
