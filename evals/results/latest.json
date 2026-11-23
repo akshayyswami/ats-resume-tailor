@@ -82,8 +82,8 @@
   "faults": {
     "must_allow_passed": 12,
     "must_allow_total": 12,
-    "must_catch_caught": 40,
-    "must_catch_total": 40,
+    "must_catch_caught": 41,
+    "must_catch_total": 41,
     "rules_covered": 26,
     "rules_total": 26
   },

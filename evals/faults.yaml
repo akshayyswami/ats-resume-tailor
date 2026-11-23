@@ -240,6 +240,12 @@ must_catch:
     input: fixtures/resumes/placeholder-fact-cited.txt
     expect_rule: placeholder-fact
     reason: a resume that cites the template's example fact, which nobody verified
+  - id: placeholder-skill-listed
+    kind: resume
+    bank: fixtures/banks/template-untouched.yaml
+    input: fixtures/resumes/placeholder-skill-listed.txt
+    expect_rule: unsupported-skill
+    reason: a Skills-only resume that the template's example fact would otherwise back, as the second half of the same mistake
 
 must_allow:
   - id: clean-persona-resume

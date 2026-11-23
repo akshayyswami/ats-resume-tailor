@@ -1,7 +1,7 @@
 {
   "name": "ats-resume-tailor",
   "description": "A resume tailor that can't make things up: every line traces to evidence you verified.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Akshay Swaminathan"
   },

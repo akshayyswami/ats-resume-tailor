@@ -390,7 +390,9 @@ def verify(text: str, evidence: Evidence, gaps: GapTable | None = None) -> Repor
     banned = _banned_patterns(evidence)
     bank_tags: set[str] = set()
     for fact in evidence.facts:
-        if fact.verified is not None:
+        # The template's example fact has `python` among its skills, and nobody verified it, so
+        # it must not back a Skills list any more than it may back a bullet.
+        if fact.verified is not None and not _is_placeholder(fact):
             bank_tags |= _resolved_tags(fact, lexicon)
     findings: list[Finding] = _hidden_characters(text)
     claim_lines = skill_items = unchecked_headings = 0

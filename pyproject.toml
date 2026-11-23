@@ -1,6 +1,6 @@
 [project]
 name = "ats-resume-tailor"
-version = "0.1.0"
+version = "0.1.1"
 description = "A resume tailor that can't make things up: every line traces to evidence you verified."
 readme = "README.md"
 license = "MIT"

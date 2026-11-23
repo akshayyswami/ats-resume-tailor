@@ -13,7 +13,7 @@ A CLI and agent skill for tailoring an ATS-friendly resume to a job description 
 
 Two figures, kept apart because one is code and one involves a model.
 
-**The checker.** <!-- eval:faults.must_catch_caught -->40<!-- /eval --> of <!-- eval:faults.must_catch_total -->40<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->12<!-- /eval --> of <!-- eval:faults.must_allow_total -->12<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->26<!-- /eval --> of <!-- eval:faults.rules_total -->26<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, a claim hidden in the header block, an invisible character inside a skill name, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
+**The checker.** <!-- eval:faults.must_catch_caught -->41<!-- /eval --> of <!-- eval:faults.must_catch_total -->41<!-- /eval --> planted faults caught, <!-- eval:faults.must_allow_passed -->12<!-- /eval --> of <!-- eval:faults.must_allow_total -->12<!-- /eval --> clean inputs allowed, across <!-- eval:faults.rules_covered -->26<!-- /eval --> of <!-- eval:faults.rules_total -->26<!-- /eval --> rules. Every planted fault is a resume or evidence file with one known problem, such as an inflated number, a skill the ledger marks not claimable, a claim with no evidence ID, a claim hidden in the header block, an invisible character inside a skill name, or a PDF whose columns read out of order. The clean inputs must produce no failure, because a checker that rejects everything would pass the first half alone.
 
 **A model asked to tailor a resume.** <!-- eval:fabrication.meta.jds -->24<!-- /eval --> invented job descriptions each ask for two skills the persona does not have, <!-- eval:fabrication.meta.asks -->48<!-- /eval --> asks in all. `<!-- eval:fabrication.meta.model -->claude-sonnet-5-5<!-- /eval -->` tailored the persona's resume to each one, once per job description, in four ways:
 
@@ -76,7 +76,7 @@ To start your own evidence file, run `uv run ats-resume-tailor init`, replace th
 The command, from GitHub:
 
 ```bash
-uv tool install git+https://github.com/akshayyswami/ats-resume-tailor@v0.1.0
+uv tool install git+https://github.com/akshayyswami/ats-resume-tailor@v0.1.1
 ```
 
 The Claude Code plugin, which adds the skill and three commands, `/ats-resume-tailor:tailor`, `/ats-resume-tailor:verify` and `/ats-resume-tailor:pdf-check`. It needs `uv`, and it runs the bundled command, so nothing else has to be installed:
